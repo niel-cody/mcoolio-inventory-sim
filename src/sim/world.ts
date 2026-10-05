@@ -9,7 +9,7 @@ import { Rng } from './rng';
 import { Stock } from './stock';
 import { Stocktakes } from './stocktake';
 import type { BaseUnits } from './baseunits';
-import type { OrderEvent, OrderItem } from './types';
+import type { OrderEvent, OrderItem, Zone } from './types';
 import { FEATURES, featurePlays, type FeatureId, type SimMode } from '../features';
 
 export interface ScheduledTask {
@@ -216,6 +216,11 @@ export class SimWorld {
 
   suggest(locationId: string, featureId: FeatureId, text: string): void {
     this.events.emit({ type: 'suggestion', tick: this.tick, locationId, featureId, text });
+  }
+
+  /** Ask the view to move. Scenario logic uses this for beats that depend on when something happens. */
+  cameraTo(beat: { view: 'world' | 'venue'; venueId?: string; zone?: Zone }): void {
+    this.events.emit({ type: 'camera', tick: this.tick, ...beat });
   }
 
   caption(text: string, featureId?: FeatureId): void {

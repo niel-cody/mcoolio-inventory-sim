@@ -1,5 +1,5 @@
 import type { BaseUnits } from './baseunits';
-import type { DepletionAction, PurchaseOrderStatus } from './types';
+import type { DepletionAction, PurchaseOrderStatus, Zone } from './types';
 import type { FeatureId } from '../features';
 
 export type SimEvent =
@@ -15,7 +15,8 @@ export type SimEvent =
   | { type: 'recipe.activated'; tick: number; itemId: string; versionId: string; note?: string }
   | { type: 'sold_out'; tick: number; posId: string; locationId: string; on: boolean }
   | { type: 'suggestion'; tick: number; locationId: string; featureId: FeatureId; text: string }
-  | { type: 'caption'; tick: number; text: string; featureId?: FeatureId };
+  | { type: 'caption'; tick: number; text: string; featureId?: FeatureId }
+  | { type: 'camera'; tick: number; view: 'world' | 'venue'; venueId?: string; zone?: Zone };
 
 export type SimEventType = SimEvent['type'];
 

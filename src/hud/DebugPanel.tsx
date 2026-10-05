@@ -244,6 +244,8 @@ export function Feed({ events }: { events: SimEvent[] }) {
             return <Row key={i} t={t} cls="ghost" text={e.text} />;
           case 'caption':
             return <Row key={i} t={t} cls="caption" text={e.text} />;
+          case 'camera':
+            return null;
         }
       })}
     </div>

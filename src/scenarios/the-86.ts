@@ -30,11 +30,20 @@ export const the86: Scenario = {
           } else {
             world.after(1, (x) => x.caption('Today: the engine keeps depleting into a deficit and raises a warning. Switching the products off at the venue is still to come.', 'sold-out-flag'));
           }
-          world.after(6, (x) => {
-            if (!x.featurePlays('ai-stock-manager')) return;
-            x.suggest(VENUE.fitzroy, 'ai-stock-manager', 'Ngara: Fitzroy is out of Absolut with hours of service left. Swap the martini to Grey Goose (3 bottles on the shelf), or transfer 2 bottles from Newtown (10 on hand).');
+          world.after(5, (x) => {
+            x.cameraTo({ view: 'world' });
+            x.caption('One venue red, two green. Sold out is a place, not a product.');
           });
-          world.after(16, (x) => {
+          world.after(12, (x) => {
+            x.cameraTo({ view: 'venue', venueId: VENUE.fitzroy, zone: 'bar' });
+            if (!x.featurePlays('ai-stock-manager')) {
+              x.caption('Back at the bar. The shelf stays empty until someone notices and acts.', 'ai-stock-manager');
+              return;
+            }
+            x.suggest(VENUE.fitzroy, 'ai-stock-manager', 'Ngara: Fitzroy is out of Absolut with hours of service left. Swap the martini to Grey Goose (3 bottles on the shelf), or transfer 2 bottles from Newtown (10 on hand).');
+            x.caption('Ngara spots it and suggests two moves: swap the martini to Grey Goose, or transfer two bottles from Newtown.', 'ai-stock-manager');
+          });
+          world.after(20, (x) => {
             x.withFeature('ingredient-swap', () => {
               const v = x.recipes.addVersion(ITEM.martini, [
                 { ingredientItemId: ITEM.greygoose, qty: 45 },
@@ -47,7 +56,7 @@ export const the86: Scenario = {
               x.caption('Swap accepted. The Fitzroy martini now pours Grey Goose and is back on the menu.', 'ingredient-swap');
             });
           });
-          world.after(30, (x) => {
+          world.after(34, (x) => {
             x.withFeature('transfers', () => {
               x.transfer(ITEM.absolut, VENUE.newtown, VENUE.fitzroy, toBase(1400));
               x.caption('Transfer: 2 bottles of Absolut, Newtown to Fitzroy, at cost. Nip and Double come back.', 'transfers');
@@ -57,6 +66,6 @@ export const the86: Scenario = {
       },
     },
     { at: 30, caption: 'Every Nip is 30 mL, every Double 60 mL, every martini 45 mL, all off one pour pool.', featureId: 'recipes-variants' },
-    { at: 150, camera: { view: 'world' }, caption: 'One venue red, two green. Sold out is a place, not a product.' },
+    { at: 200, camera: { view: 'world' }, caption: 'End of the night. Compare the rings.' },
   ],
 };

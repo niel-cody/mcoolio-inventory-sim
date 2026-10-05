@@ -66,7 +66,7 @@ export function createMcOolioWorld(seed: number, mode: SimMode = 'today'): SimWo
   c.addVenue({ id: VENUE.fitzroy, name: 'McOolio Fitzroy', shortName: 'Fitzroy', character: 'Cocktail-led', position: [0, -8] });
 
   // ─── Suppliers ────────────────────────────────────────────────────────────
-  c.addSupplier({ id: SUPPLIER.harbour, name: 'Harbour Liquor Co', type: 'LIQUOR', leadTimeTicks: 150, colour: '#f2b134' });
+  c.addSupplier({ id: SUPPLIER.harbour, name: 'Harbour Liquor Co', type: 'LIQUOR', leadTimeTicks: 90, colour: '#f2b134' });
   c.addSupplier({ id: SUPPLIER.nightowl, name: 'Night Owl Roasters', type: 'COFFEE', leadTimeTicks: 200, colour: '#c9774a' });
   c.addSupplier({ id: SUPPLIER.spiceroute, name: 'Spice Route Wholesale', type: 'FOOD', leadTimeTicks: 120, colour: '#e0553d' });
 
@@ -179,7 +179,7 @@ export function createMcOolioWorld(seed: number, mode: SimMode = 'today'): SimWo
 
   // ─── Reorder points and pars (par-driven ordering is a Coming feature; the thresholds themselves are plain data) ─
   const thresholds: Record<string, { reorder: number; par: number }> = {
-    [ITEM.kingfisher]: { reorder: 24, par: 120 },
+    [ITEM.kingfisher]: { reorder: 48, par: 144 },
     [ITEM.absolut]: { reorder: 700, par: 4200 },
     [ITEM.greygoose]: { reorder: 350, par: 1400 },
     [ITEM.espresso]: { reorder: 600, par: 7200 },

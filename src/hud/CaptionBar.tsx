@@ -6,7 +6,8 @@ import { FeaturePill } from './DebugPanel';
 export function CaptionBar() {
   const world = useWorld();
   const runner = useSim((s) => s.runner);
-  const latest = useMemo(() => [...world.events.log].reverse().find((e) => e.type === 'caption'), [world, world.events.count]);
+  const count = world.events.count;
+  const latest = useMemo(() => [...world.events.log].reverse().find((e) => e.type === 'caption'), [world, count]);
   const text = latest?.type === 'caption' ? latest.text : runner.scenario.strap;
   const featureId = latest?.type === 'caption' ? latest.featureId : undefined;
   return (

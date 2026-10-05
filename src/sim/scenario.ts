@@ -67,6 +67,9 @@ export class ScenarioRunner {
 
   private load(): SimWorld {
     const world = this.build(seedFor(this.scenario), this.mode);
+    world.events.on((e) => {
+      if (e.type === 'camera') this.listeners.onCamera?.({ view: e.view, venueId: e.venueId, zone: e.zone });
+    });
     if (this.scenario.setup) {
       this.scenario.setup(world);
       world.events.clear();
