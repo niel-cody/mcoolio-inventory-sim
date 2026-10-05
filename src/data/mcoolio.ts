@@ -61,9 +61,9 @@ export function createMcOolioWorld(seed: number, mode: SimMode = 'today'): SimWo
   const c = w.catalogue;
 
   // ─── Venues ───────────────────────────────────────────────────────────────
-  c.addVenue({ id: VENUE.newtown, name: 'McOolio Newtown', shortName: 'Newtown', character: 'Flagship, biggest kitchen', position: [-7, 2] });
-  c.addVenue({ id: VENUE.valley, name: 'McOolio Fortitude Valley', shortName: 'Valley', character: 'Late-night bar heavy', position: [6, 4] });
-  c.addVenue({ id: VENUE.fitzroy, name: 'McOolio Fitzroy', shortName: 'Fitzroy', character: 'Cocktail-led', position: [1, -6] });
+  c.addVenue({ id: VENUE.newtown, name: 'McOolio Newtown', shortName: 'Newtown', character: 'Flagship, biggest kitchen', position: [-10, 3] });
+  c.addVenue({ id: VENUE.valley, name: 'McOolio Fortitude Valley', shortName: 'Valley', character: 'Late-night bar heavy', position: [9, 5] });
+  c.addVenue({ id: VENUE.fitzroy, name: 'McOolio Fitzroy', shortName: 'Fitzroy', character: 'Cocktail-led', position: [0, -8] });
 
   // ─── Suppliers ────────────────────────────────────────────────────────────
   c.addSupplier({ id: SUPPLIER.harbour, name: 'Harbour Liquor Co', type: 'LIQUOR', leadTimeTicks: 150, colour: '#f2b134' });

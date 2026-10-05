@@ -100,3 +100,47 @@ td.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
 .tracker span { padding: 2px 6px; border-radius: 6px; background: rgba(255,255,255,0.06); color: var(--muted); }
 .tracker span.done { background: var(--purple); color: white; }
 .tracker span.now { background: var(--yellow); color: var(--charcoal); font-weight: 700; }
+
+/* ─── App shell ─── */
+.app { position: fixed; inset: 0; }
+.hud { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; }
+.hud > * { pointer-events: auto; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 16px; background: linear-gradient(180deg, rgba(13,7,25,0.92), rgba(13,7,25,0.0));
+}
+.topbar-left, .topbar-mid, .topbar-right { display: flex; align-items: center; gap: 8px; }
+.brand { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+.brand span { color: var(--purple-glow); }
+.crumbs { display: flex; align-items: center; gap: 4px; margin-left: 6px; }
+.crumb { background: transparent; border: 0; color: var(--muted); font-weight: 700; padding: 4px 6px; border-radius: 6px; }
+.crumb.on, .crumb:hover { color: var(--text); background: rgba(155,108,242,0.18); }
+.crumb-sep { color: var(--muted); }
+.btn.small { padding: 4px 8px; font-size: 12px; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.mode-toggle { display: flex; background: rgba(26,15,51,0.9); border: 1px solid var(--card-border); border-radius: 999px; padding: 3px; }
+.mode-toggle button { background: transparent; border: 0; color: var(--muted); font-weight: 700; padding: 5px 12px; border-radius: 999px; }
+.mode-toggle button.on { background: var(--yellow); color: var(--charcoal); }
+.captionbar {
+  margin: 0 auto 14px; width: min(860px, calc(100% - 32px));
+  background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 10px 16px 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+}
+.captionbar-scenario { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; }
+.captionbar-text { font-size: 16px; font-weight: 500; display: flex; gap: 10px; align-items: center; margin: 4px 0 8px; }
+.captionbar-progress { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.captionbar-progress > div { height: 100%; background: var(--purple-glow); transition: width 0.3s linear; }
+.footer-line { position: absolute; bottom: 4px; left: 16px; font-size: 11px; color: var(--muted); pointer-events: none; }
+.debug-drawer { position: absolute; inset: 0; background: rgba(13,7,25,0.96); z-index: 20; }
+
+/* ─── 3D labels ─── */
+.island-label, .depot-label {
+  background: rgba(26,15,51,0.92); border: 1px solid var(--card-border); border-radius: 10px; padding: 6px 10px;
+  white-space: nowrap; text-align: center; backdrop-filter: blur(2px);
+}
+.island-label.heat-warning { border-color: var(--amber); }
+.island-label.heat-soldout { border-color: var(--red); }
+.island-name { font-weight: 900; font-size: 15px; color: var(--text); }
+.island-sub { font-size: 11px; color: var(--muted); }
+.island-soldout { color: var(--red); font-weight: 700; }
+.depot-label { border-width: 1px; }
