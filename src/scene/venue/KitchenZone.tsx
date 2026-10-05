@@ -5,11 +5,13 @@ import { ITEM_ANCHOR, ZONE_CENTRE } from '../anchors';
 import { P } from '../palette';
 import { useWorld } from '../useWorld';
 import { useLabel } from '../useLabel';
+import { useToWorld } from './IslandContext';
 import { Clickable } from './Clickable';
 import { Puffs } from './Puffs';
 
 export function KitchenZone({ venueId, focused }: { venueId: string; focused: boolean }) {
   const world = useWorld();
+  const toWorld = useToWorld();
   const [cx, , cz] = ZONE_CENTRE.kitchen;
   const portions = toDecimal(world.stock.onHand(ITEM.biryaniPool, venueId));
   const rice = world.stock.onHand(ITEM.rice, venueId);
@@ -20,10 +22,10 @@ export function KitchenZone({ venueId, focused }: { venueId: string; focused: bo
   const cooking = Boolean(run);
   const pot = ITEM_ANCHOR[ITEM.biryaniPool];
 
-  useLabel(`zone:${venueId}:kitchen`, [cx, 2.0, cz - 0.6], () => <div className="zone-label">Kitchen</div>, { enabled: focused, maxDistance: 22, className: 'zone-label-anchor' });
+  useLabel(`zone:${venueId}:kitchen`, toWorld([cx, 2.0, cz - 0.6]), () => <div className="zone-label">Kitchen</div>, { enabled: focused, maxDistance: 22, className: 'zone-label-anchor' });
   useLabel(
     `pot:${venueId}`,
-    [pot[0], pot[1] + 0.55, pot[2]],
+    toWorld([pot[0], pot[1] + 0.55, pot[2]]),
     () => (
       <div className={`pot-label ${portions <= 0 ? 'heat-soldout' : ''}`}>
         {cooking ? `Cooking · ${run?.plannedQty} portions in ${Math.max(1, Math.ceil((1 - world.production.progress(run!)) * ((run!.completeTick ?? 0) - (run!.startedTick ?? 0))))} min` : `${Math.max(0, Math.floor(portions))} portions`}

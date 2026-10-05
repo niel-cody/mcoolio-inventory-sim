@@ -151,3 +151,50 @@ td.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
 .zone-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lilac); background: rgba(26,15,51,0.85); padding: 2px 8px; border-radius: 6px; }
 .pot-label { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text); background: rgba(26,15,51,0.9); border: 1px solid var(--card-border); padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
 .pot-label.heat-soldout { border-color: var(--red); color: var(--red); }
+
+/* ─── HUD layout ─── */
+.hud { display: grid; grid-template-rows: auto 1fr auto; }
+.hud-mid { display: flex; justify-content: space-between; align-items: flex-start; padding: 0 16px; pointer-events: none; min-height: 0; }
+.hud-left, .hud-right { pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+.hud-left > *, .hud-right > * { pointer-events: auto; }
+.hud-bottom { display: grid; grid-template-columns: 300px 1fr 320px; gap: 12px; align-items: end; padding: 0 16px 22px; }
+.hud-bottom .captionbar { margin: 0 auto; width: 100%; max-width: 860px; }
+.kpis-hud .kpi { min-width: 150px; background: var(--card); border: 1px solid var(--card-border); }
+.kpi.kpi-alert { border-color: var(--red); }
+.kpi .sub { font-size: 11px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.panel { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; font-size: 12px; }
+.panel-title { font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+.muted { color: var(--muted); }
+.small { font-size: 11px; }
+.mono { font-family: var(--mono); }
+.feed-panel { max-height: 260px; overflow: hidden; }
+.feed-panel .feed { max-height: 220px; overflow: hidden; }
+.po-panel { cursor: pointer; }
+.tracker.big { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin: 6px 0; }
+.tracker-step { display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; position: relative; }
+.tracker-step::before { content: ''; position: absolute; top: 6px; left: -50%; width: 100%; height: 2px; background: rgba(255,255,255,0.1); z-index: 0; }
+.tracker-step:first-child::before { display: none; }
+.tracker-step.done::before, .tracker-step.now::before { background: var(--purple-glow); }
+.tracker-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.12); z-index: 1; }
+.tracker-step.done .tracker-dot { background: var(--purple-glow); }
+.tracker-step.now .tracker-dot { background: var(--yellow); box-shadow: 0 0 0 4px rgba(255,235,59,0.25); }
+.tracker-label { font-size: 10px; font-weight: 700; color: var(--muted); }
+.tracker-step.now .tracker-label { color: var(--text); }
+.tracker-step.done .tracker-label { color: var(--lilac); }
+.tracker-time { font-family: var(--mono); font-size: 10px; color: var(--muted); min-height: 12px; }
+.hud-card { width: 340px; max-height: calc(100vh - 260px); overflow: auto; position: relative; padding: 14px; }
+.card-close { position: absolute; top: 8px; right: 10px; background: transparent; border: 0; color: var(--muted); font-size: 18px; }
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; padding-right: 20px; }
+.card-title { font-size: 17px; font-weight: 900; }
+.card-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.card-row { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 1px solid rgba(155,108,242,0.12); font-size: 12px; }
+.card-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700; }
+.card-value { text-align: right; }
+.card-section { margin-top: 8px; }
+.card-section p { margin: 4px 0; font-size: 13px; }
+.card-table { font-size: 11px; }
+.pill.type-stocked { background: var(--sky); color: #042033; }
+.pill.type-non_stocked { background: var(--lilac); color: var(--purple-ink); }
+.pill.type-batch { background: var(--orange); color: #2b1300; }
+.pill.heat { border: 1px solid currentColor; background: transparent; }
+.hovertip { position: fixed; z-index: 30; pointer-events: none; background: rgba(26,15,51,0.95); border: 1px solid var(--card-border); color: var(--text); padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }

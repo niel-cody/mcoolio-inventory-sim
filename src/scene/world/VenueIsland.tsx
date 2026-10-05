@@ -7,6 +7,8 @@ import { HEAT_COLOUR, P } from '../palette';
 import { useWorld } from '../useWorld';
 import { VenueDiorama } from '../venue/VenueDiorama';
 import { useLabel } from '../useLabel';
+import { islandRotation } from '../anchors';
+import { IslandContext } from '../venue/IslandContext';
 
 export function VenueIsland({ venue, index }: { venue: Venue; index: number }) {
   const world = useWorld();
@@ -31,7 +33,8 @@ export function VenueIsland({ venue, index }: { venue: Venue; index: number }) {
     }
   });
 
-  const rotation = [0, index * 0.35 - 0.3, 0] as [number, number, number];
+  const rotY = islandRotation(index);
+  const rotation = [0, rotY, 0] as [number, number, number];
 
   useLabel(
     `venue:${venue.id}`,
@@ -84,7 +87,9 @@ export function VenueIsland({ venue, index }: { venue: Venue; index: number }) {
           <circleGeometry args={[4.1, 9]} />
           <meshStandardMaterial color="#2a174f" roughness={0.95} />
         </mesh>
-        <VenueDiorama venue={venue} focused={focused} />
+        <IslandContext.Provider value={{ x, z, rotation: rotY }}>
+          <VenueDiorama venue={venue} focused={focused} />
+        </IslandContext.Provider>
         {/* warm venue-at-night light */}
         <pointLight position={[0, 3.5, 0]} color={P.warm} intensity={focused ? 14 : 7} distance={12} decay={2} />
       </group>

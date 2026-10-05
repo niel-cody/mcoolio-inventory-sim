@@ -200,7 +200,7 @@ function VenueTable({ venue }: { venue: Venue }) {
   );
 }
 
-function Feed({ events }: { events: SimEvent[] }) {
+export function Feed({ events }: { events: SimEvent[] }) {
   const runner = useSim((s) => s.runner);
   const world = runner.world;
   const name = (itemId: string) => world.catalogue.items.get(itemId)?.name ?? itemId;

@@ -9,6 +9,7 @@ import { P } from '../palette';
 import { useSimEvents } from '../useSimEvents';
 import { useWorld } from '../useWorld';
 import { useLabel } from '../useLabel';
+import { useToWorld } from './IslandContext';
 import { Bottle } from './Bottle';
 import { Clickable } from './Clickable';
 import { Puffs, type PuffsHandle } from './Puffs';
@@ -17,6 +18,7 @@ const BOTTLE_ML = toBase(700);
 
 export function BarZone({ venueId, focused }: { venueId: string; focused: boolean }) {
   const world = useWorld();
+  const toWorld = useToWorld();
   const [cx, , cz] = ZONE_CENTRE.bar;
   const absolut = world.stock.onHand(ITEM.absolut, venueId);
   const goose = world.stock.onHand(ITEM.greygoose, venueId);
@@ -57,7 +59,7 @@ export function BarZone({ venueId, focused }: { venueId: string; focused: boolea
 
   useLabel(
     `pot:${venueId}:bar`,
-    [cx - 0.4, 2.1, cz - 0.6],
+    toWorld([cx - 0.4, 2.1, cz - 0.6]),
     () => <div className="zone-label">Bar</div>,
     { enabled: focused, maxDistance: 22, className: 'zone-label-anchor' },
   );

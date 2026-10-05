@@ -5,6 +5,7 @@ import { ITEM_ANCHOR, ZONE_CENTRE } from '../anchors';
 import { P } from '../palette';
 import { useWorld } from '../useWorld';
 import { useLabel } from '../useLabel';
+import { useToWorld } from './IslandContext';
 import { Clickable } from './Clickable';
 
 const CARTON = toBase(24);
@@ -13,6 +14,7 @@ for (let y = 0; y < 3; y++) for (let z = 0; z < 2; z++) for (let x = 0; x < 3; x
 
 export function CoolRoomZone({ venueId, focused }: { venueId: string; focused: boolean }) {
   const world = useWorld();
+  const toWorld = useToWorld();
   const [cx, , cz] = ZONE_CENTRE.coolroom;
   const onHand = world.stock.onHand(ITEM.kingfisher, venueId);
   const full = Math.max(0, Math.floor(onHand / CARTON));
@@ -21,7 +23,7 @@ export function CoolRoomZone({ venueId, focused }: { venueId: string; focused: b
   const heat = world.availability.itemHeat(ITEM.kingfisher, venueId);
   const [ax, ay, az] = ITEM_ANCHOR[ITEM.kingfisher];
 
-  useLabel(`zone:${venueId}:coolroom`, [cx, 2.0, cz - 0.6], () => <div className="zone-label">Cool room</div>, { enabled: focused, maxDistance: 22, className: 'zone-label-anchor' });
+  useLabel(`zone:${venueId}:coolroom`, toWorld([cx, 2.0, cz - 0.6]), () => <div className="zone-label">Cool room</div>, { enabled: focused, maxDistance: 22, className: 'zone-label-anchor' });
 
   return (
     <group>

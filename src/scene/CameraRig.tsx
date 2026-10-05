@@ -6,6 +6,7 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { useSim } from '../store';
 import { useWorld } from './useWorld';
 import type { Zone } from '../sim/types';
+import { islandRotation, rotateLocal } from './anchors';
 
 const WORLD_POS = new Vector3(0, 27, 25);
 const WORLD_LOOK = new Vector3(-1, 0, -2);
@@ -27,11 +28,17 @@ export function CameraRig() {
 
   const target = useMemo(() => {
     if (beat.view === 'venue' && beat.venueId) {
-      const v = world.catalogue.venues.get(beat.venueId);
+      const venues = world.catalogue.venueList();
+      const index = venues.findIndex((v) => v.id === beat.venueId);
+      const v = venues[index];
       const [x, z] = v?.position ?? [0, 0];
+      const rot = islandRotation(Math.max(0, index));
       const off = beat.zone ? ZONE_OFFSET[beat.zone] : [0, 0.8, 0];
-      const look = new Vector3(x + off[0] * 0.6, off[1], z + off[2] * 0.6);
-      const pos = beat.zone ? new Vector3(x + 6.5 + off[0] * 0.4, 5.5, z + 6.5 + off[2] * 0.4) : new Vector3(x + 9, 8, z + 9);
+      const lookLocal = rotateLocal([off[0] * 0.7, off[1], off[2] * 0.7], rot);
+      // Camera sits in front of the island (its +z side, where the bar counter faces) and a little to the right.
+      const camLocal = rotateLocal(beat.zone ? [off[0] * 0.5 + 3.5, 5.2, off[2] * 0.5 + 7.5] : [4.5, 7.5, 10.5], rot);
+      const look = new Vector3(x + lookLocal[0], lookLocal[1], z + lookLocal[2]);
+      const pos = new Vector3(x + camLocal[0], camLocal[1], z + camLocal[2]);
       return { pos, look };
     }
     return { pos: WORLD_POS.clone(), look: WORLD_LOOK.clone() };

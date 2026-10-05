@@ -3,10 +3,12 @@ import { ZONE_CENTRE } from '../anchors';
 import { P } from '../palette';
 import { useWorld } from '../useWorld';
 import { useLabel } from '../useLabel';
+import { useToWorld } from './IslandContext';
 import { Clickable } from './Clickable';
 
 export function DockZone({ venueId, focused }: { venueId: string; focused: boolean }) {
   const world = useWorld();
+  const toWorld = useToWorld();
   const [cx, , cz] = ZONE_CENTRE.dock;
   const pos = world.purchasing.list(venueId);
   const onDock = pos.find((po) => (po.status === 'IN_TRANSIT' && world.purchasing.hasArrived(po)) || po.status === 'RECEIVED');
@@ -16,10 +18,10 @@ export function DockZone({ venueId, focused }: { venueId: string; focused: boole
   const cartons = Math.min(8, onDock?.status === 'RECEIVED' ? received : ordered);
   const suggested = pos.find((po) => po.suggested && po.status === 'DRAFT');
 
-  useLabel(`zone:${venueId}:dock`, [cx, 2.0, cz - 0.6], () => <div className="zone-label">Dock and store room</div>, { enabled: focused, maxDistance: 22, className: 'zone-label-anchor' });
+  useLabel(`zone:${venueId}:dock`, toWorld([cx, 2.0, cz - 0.6]), () => <div className="zone-label">Dock and store room</div>, { enabled: focused, maxDistance: 22, className: 'zone-label-anchor' });
   useLabel(
     `clipboard:${venueId}`,
-    [cx + 1.0, 1.5, cz + 0.6],
+    toWorld([cx + 1.0, 1.5, cz + 0.6]),
     () => (
       <div className="pot-label">
         {onDock?.status === 'RECEIVED' ? `Ordered ${ordered} · received ${received}${received < ordered ? ' · short' : ''}` : 'Checking the delivery'}
