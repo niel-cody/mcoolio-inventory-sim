@@ -5,6 +5,11 @@ import { runService } from './service';
 import { FITZROY_PROFILE, NEWTOWN_PROFILE, VALLEY_PROFILE } from '../scenarios/profiles';
 
 describe('seed sanity', () => {
+  it('no venue starts red or amber', () => {
+    const w = createMcOolioWorld(1);
+    for (const v of w.catalogue.venueList()) expect(w.availability.venueHeat(v.id), v.name).toBe('healthy');
+  });
+
   it('every product resolves to an item and every recipe ingredient exists', () => {
     const w = createMcOolioWorld(1);
     for (const p of w.catalogue.products.values()) {

@@ -192,6 +192,8 @@ export function createMcOolioWorld(seed: number, mode: SimMode = 'today'): SimWo
   };
   for (const venue of c.venueList()) {
     for (const [itemId, t] of Object.entries(thresholds)) {
+      // Only items the venue actually stocks get thresholds; an empty level would read as sold out.
+      if (!w.stock.levels.has(`${itemId}@${venue.id}`)) continue;
       w.stock.setThresholds(itemId, venue.id, { reorderPoint: toBase(t.reorder), parLevel: toBase(t.par) });
     }
   }
