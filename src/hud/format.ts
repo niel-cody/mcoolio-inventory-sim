@@ -18,7 +18,7 @@ export function baseQty(qty: BaseUnits, item: InventoryItem): string {
   return `${num(d, Number.isInteger(d) ? 0 : 1)} ${uom}`;
 }
 
-/** Quantity in purchase units when the item has one, e.g. "3 cartons + 7 bottles". */
+/** Quantity in purchase units when the item has one, e.g. "3 × carton of 24 + 7 each". */
 export function purchaseQty(qty: BaseUnits, item: InventoryItem): string | null {
   if (!item.purchaseUnit) return null;
   const factorBase = item.purchaseUnit.factor * SCALE;
@@ -26,19 +26,11 @@ export function purchaseQty(qty: BaseUnits, item: InventoryItem): string | null 
   const abs = Math.abs(qty);
   const whole = Math.floor(abs / factorBase);
   const rest = abs - whole * factorBase;
-  const unitName = item.purchaseUnit.name.toLowerCase();
+  const unitName = item.purchaseUnit.name.charAt(0).toLowerCase() + item.purchaseUnit.name.slice(1);
   const parts: string[] = [];
-  if (whole > 0) parts.push(`${whole} ${pluralise(unitName, whole)}`);
+  if (whole > 0) parts.push(`${whole} × ${unitName}`);
   if (rest > 0 || whole === 0) parts.push(`${num(toDecimal(rest), 0)} ${item.baseUom}`);
   return sign + parts.join(' + ');
-}
-
-function pluralise(unitName: string, n: number): string {
-  // "carton of 24" -> "cartons of 24"; "700 ml bottle" -> "700 ml bottles"; "pack of 10" -> "packs of 10"
-  if (n === 1) return unitName;
-  const m = unitName.match(/^(\w+)( of .*)$/);
-  if (m) return `${m[1]}s${m[2]}`;
-  return `${unitName}s`;
 }
 
 /** Average cost per sensible unit: per bottle/carton when there is a purchase unit, else per base unit. */
