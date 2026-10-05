@@ -13,7 +13,7 @@ export const the86: Scenario = {
   number: 2,
   title: 'The 86',
   strap: 'Fitzroy pours Absolut hard. The pour pool hits zero and the martini, Nip and Double go down at Fitzroy only.',
-  featureIds: ['depletion-engine', 'sold-out-flag', 'ai-stock-manager', 'ingredient-swap', 'transfers'],
+  featureIds: ['depletion-engine', 'sold-out-flag', 'ai-stock-manager', 'ingredient-swap', 'transfers', 'waste-capture'],
   durationTicks: 220,
   suggestedSpeed: 4,
   steps: [
@@ -67,6 +67,16 @@ export const the86: Scenario = {
       },
     },
     { at: 30, caption: 'Every Nip is 30 mL, every Double 60 mL, every martini 45 mL, all off one pour pool.', featureId: 'recipes-variants' },
-    { at: 200, camera: { view: 'world' }, caption: 'End of the night. Compare the rings.' },
+    {
+      at: 196,
+      camera: { view: 'venue', venueId: VENUE.fitzroy, zone: 'bar' },
+      caption: 'Close. The opened Grey Goose has 60 mL of dregs. The bar records it as waste, so the count tomorrow is honest.',
+      featureId: 'waste-capture',
+      ghostCaption: 'Coming: at close, the dregs in the opened bottle get recorded as waste with a reason.',
+      run: (w) => {
+        if (w.stock.onHand(ITEM.greygoose, VENUE.fitzroy) >= toBase(60)) w.waste(ITEM.greygoose, VENUE.fitzroy, toBase(60), 'Dregs at close');
+      },
+    },
+    { at: 208, camera: { view: 'world' }, caption: 'End of the night. Compare the rings.' },
   ],
 };

@@ -33,6 +33,8 @@ export interface SimStore {
   selection: Selection | null;
   hover: HoverTip | null;
   debugOpen: boolean;
+  /** True once the 3D scene has drawn its first frame. */
+  sceneReady: boolean;
 
   setScenario: (id: string) => void;
   setMode: (mode: SimMode) => void;
@@ -45,6 +47,7 @@ export interface SimStore {
   setCamera: (beat: CameraBeat) => void;
   select: (s: Selection | null) => void;
   setHover: (h: HoverTip | null) => void;
+  markSceneReady: () => void;
   toggleDebug: () => void;
 }
 
@@ -68,6 +71,7 @@ export const useSim = create<SimStore>((set, get) => {
     selection: null,
     hover: null,
     debugOpen: false,
+    sceneReady: false,
 
     setScenario: (id) => {
       const scenario = scenarioById(id);
@@ -95,6 +99,7 @@ export const useSim = create<SimStore>((set, get) => {
     setCamera: (beat) => set({ camera: beat }),
     select: (selection) => set({ selection }),
     setHover: (hover) => set({ hover }),
+    markSceneReady: () => set({ sceneReady: true }),
     toggleDebug: () => set((s) => ({ debugOpen: !s.debugOpen })),
   };
 });

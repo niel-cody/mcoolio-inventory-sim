@@ -13,6 +13,7 @@ import { useSim } from './store';
 export default function App() {
   const debugOpen = useSim((s) => s.debugOpen);
   const mode = useSim((s) => s.mode);
+  const sceneReady = useSim((s) => s.sceneReady);
   return (
     <div className="app">
       <SceneRoot />
@@ -36,6 +37,14 @@ export default function App() {
         <div className="footer-line">All prices, costs, volumes and venues are invented demo data.</div>
       </div>
       <HoverTip />
+      {!sceneReady && (
+        <div className="splash">
+          <div className="splash-title">
+            McOolio <span>Inventory Sim</span>
+          </div>
+          <div className="splash-sub">Warming up the kitchen, chilling the cool room.</div>
+        </div>
+      )}
       {debugOpen && (
         <div className="debug-drawer">
           <DebugPanel />

@@ -239,3 +239,9 @@ td.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
   .brand { font-size: 20px; }
   .clock { font-size: 17px; }
 }
+
+.splash { position: absolute; inset: 0; z-index: 50; background: radial-gradient(ellipse at 50% 40%, #2a1650 0%, var(--purple-night) 70%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; animation: splash-in 0.3s ease; }
+.splash-title { font-size: 40px; font-weight: 900; letter-spacing: -0.02em; }
+.splash-title span { color: var(--purple-glow); }
+.splash-sub { color: var(--muted); font-size: 15px; }
+@keyframes splash-in { from { opacity: 0; } to { opacity: 1; } }

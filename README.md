@@ -27,3 +27,14 @@ npm run dev
 Mirrors the engine: item types and resolve by type, recipe expansion to leaf lines, the batch boundary, base units and rounding, the reservation lifecycle and the decideAction matrix, FIFO layers with average cost shown, goods receipts creating layers, production runs consuming at production, stocktake variance movements, oversell into a deficit.
 
 Demo only: the "In transit" purchase order state (the real service has DRAFT, SENT, RECEIVED, POSTED), lead times, the order generator and venue profiles, prices and costs, per-venue recipe overrides (the Coming ingredient swap), and everything in Roadmap mode.
+
+## Five-minute run of show
+
+1. World view, Today mode, scenario 1 Friday service. Press play at 4x.
+2. Click Fitzroy to fly in. Click a bottle, the pot or a carton for its live card. Tickets split four ways on each martini.
+3. Pick scenario 2, The 86. Fitzroy goes red, the other two stay green.
+4. Pick scenario 3, The ordering cycle, at 16x. Follow the truck; the tracker walks Draft, Sent, In transit, Received, Posted.
+5. Pick scenario 4, Batch day. The rice sacks shrink at production and never at the till.
+6. Flip to Where we're going and replay The 86: Ngara's suggestion, the Grey Goose swap, the transfer and the waste beat at close.
+
+Reset replays any scenario from the same seed. The Tables button opens the raw sim tables.

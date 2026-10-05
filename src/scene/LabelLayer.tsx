@@ -2,6 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useRef } from 'react';
 import { Vector3 } from 'three';
 import { bindLabelElement, labelAnchors, labelElements, useLabelAnchors } from './labels';
+import { useSim } from '../store';
 
 /** Renders the label divs. Lives outside the Canvas. */
 export function LabelLayer() {
@@ -22,7 +23,13 @@ export function LabelProjector() {
   const camera = useThree((s) => s.camera);
   const size = useThree((s) => s.size);
   const v = useRef(new Vector3());
+  const ready = useRef(false);
   useFrame(() => {
+    if (!ready.current) {
+      ready.current = true;
+      // Second frame: the first one is the warm-up, so wait a tick before lifting the splash.
+      window.setTimeout(() => useSim.getState().markSceneReady(), 400);
+    }
     const els = labelElements();
     for (const [id, a] of labelAnchors()) {
       const el = els.get(id);
