@@ -11,7 +11,7 @@ export function SceneRoot() {
   return (
     <Canvas
       shadows
-      dpr={[1, 1.75]}
+      dpr={[1, 1.5]}
       camera={{ position: [0, 27, 25], fov: 38, near: 0.5, far: 200 }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       onPointerMissed={() => select(null)}
@@ -29,7 +29,7 @@ export function SceneRoot() {
         intensity={1.1}
         color="#d9c6ff"
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-camera-left={-35}
         shadow-camera-right={35}
         shadow-camera-top={35}

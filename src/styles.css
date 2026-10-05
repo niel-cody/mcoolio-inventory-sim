@@ -221,3 +221,21 @@ td.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
 .hud-right { position: absolute; right: 16px; top: 0; }
 .hud-left { flex-wrap: wrap; flex-direction: row; max-width: calc(100% - 380px); }
 .kpis-hud { flex-wrap: wrap; }
+
+/* ─── Projector sizes ─── */
+@media (min-width: 1600px) {
+  body { font-size: 15px; }
+  .captionbar-text { font-size: 20px; }
+  .captionbar { padding: 14px 20px 16px; }
+  .kpis-hud .kpi { min-width: 160px; padding: 8px 14px; }
+  .kpis-hud .kpi .value { font-size: 22px; }
+  .kpis-hud .kpi .label { font-size: 11px; }
+  .panel { font-size: 13px; }
+  .feed-panel { max-height: 300px; }
+  .feed-panel .feed { max-height: 260px; }
+  .hud-card { width: 380px; }
+  .island-name { font-size: 17px; }
+  .island-sub { font-size: 12px; }
+  .brand { font-size: 20px; }
+  .clock { font-size: 17px; }
+}

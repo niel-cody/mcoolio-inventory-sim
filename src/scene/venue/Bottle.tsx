@@ -6,7 +6,7 @@ export function Bottle({ position, fill, glass, liquid, scale = 1 }: { position:
   const h = 0.5;
   return (
     <group position={position} scale={scale}>
-      <mesh position={[0, h / 2, 0]} castShadow>
+      <mesh position={[0, h / 2, 0]}>
         <cylinderGeometry args={[0.09, 0.1, h, 10]} />
         <Mat colour={glass} roughness={0.25} metalness={0.1} opacity={0.55} />
       </mesh>
