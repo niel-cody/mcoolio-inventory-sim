@@ -96,7 +96,8 @@ export function startLoop(): () => void {
   let frame = 0;
   const tickLoop = (now: number) => {
     const { playing, speed, runner } = useSim.getState();
-    const dt = Math.min(0.25, (now - last) / 1000);
+    // Cap at one second so a throttled background tab catches up instead of crawling.
+    const dt = Math.min(1, (now - last) / 1000);
     last = now;
     if (playing && !runner.done) {
       carry += dt * speed;
