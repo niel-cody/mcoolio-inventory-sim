@@ -5,7 +5,8 @@ import type { Scenario } from '../sim/scenario';
 import { hitZero, onceWhen } from './helpers';
 import { FITZROY_PROFILE, NEWTOWN_PROFILE, VALLEY_PROFILE } from './profiles';
 
-const FITZROY_HARD = { ...FITZROY_PROFILE, ordersPerTick: 0.6, weights: { ...FITZROY_PROFILE.weights, [PRODUCT.martini]: 9, [PRODUCT.double]: 6 } };
+// Cocktail night: the kitchen is quiet, so the only story at Fitzroy is the pour pool.
+const FITZROY_HARD = { ...FITZROY_PROFILE, ordersPerTick: 0.6, weights: { [PRODUCT.martini]: 9, [PRODUCT.double]: 6, [PRODUCT.nip]: 3, [PRODUCT.kingfisher]: 3 } };
 
 export const the86: Scenario = {
   id: 'the-86',

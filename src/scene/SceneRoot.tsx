@@ -15,6 +15,9 @@ export function SceneRoot() {
       camera={{ position: [0, 27, 25], fov: 38, near: 0.5, far: 200 }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       onPointerMissed={() => select(null)}
+      onCreated={(state) => {
+        if (import.meta.env.DEV) (window as unknown as { __r3f: unknown }).__r3f = state;
+      }}
       style={{ position: 'absolute', inset: 0 }}
     >
       <color attach="background" args={[P.night]} />
