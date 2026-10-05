@@ -1,7 +1,7 @@
-import { SCENARIOS } from '../scenarios';
 import { formatTick } from '../sim/clock';
 import { useSim, type Speed } from '../store';
 import { useWorld } from '../scene/useWorld';
+import { ScenarioPicker } from './ScenarioPicker';
 
 export function TopBar() {
   const world = useWorld();
@@ -9,9 +9,8 @@ export function TopBar() {
   const playing = useSim((s) => s.playing);
   const speed = useSim((s) => s.speed);
   const mode = useSim((s) => s.mode);
-  const scenarioId = useSim((s) => s.scenarioId);
   const camera = useSim((s) => s.camera);
-  const { setScenario, setMode, togglePlay, setSpeed, reset, setCamera, toggleDebug } = useSim.getState();
+  const { setMode, togglePlay, setSpeed, reset, setCamera, toggleDebug } = useSim.getState();
   const venue = camera.view === 'venue' && camera.venueId ? world.catalogue.venues.get(camera.venueId) : undefined;
 
   return (
@@ -60,13 +59,7 @@ export function TopBar() {
             Where we're going
           </button>
         </div>
-        <select className="select" value={scenarioId} onChange={(e) => setScenario(e.target.value)} aria-label="Scenario">
-          {SCENARIOS.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.number}. {s.title}
-            </option>
-          ))}
-        </select>
+        <ScenarioPicker />
         <button className="btn ghost small" onClick={toggleDebug} title="Raw sim tables">
           Tables
         </button>

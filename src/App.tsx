@@ -12,12 +12,14 @@ import { useSim } from './store';
 
 export default function App() {
   const debugOpen = useSim((s) => s.debugOpen);
+  const mode = useSim((s) => s.mode);
   return (
     <div className="app">
       <SceneRoot />
       <LabelLayer />
       <div className="hud">
         <TopBar />
+        {mode === 'roadmap' && <div className="mode-badge">Where we're going · roadmap layer on</div>}
         <div className="hud-mid">
           <div className="hud-left">
             <KpiTiles />
