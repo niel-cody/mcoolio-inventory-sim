@@ -1,40 +1,36 @@
 import type { Venue } from '../../sim/types';
-import { ZONE_OFFSET } from '../CameraRig';
+import { Mat } from '../Ghost';
 import { P } from '../palette';
+import { BarZone } from './BarZone';
+import { CoolRoomZone } from './CoolRoomZone';
+import { DockZone } from './DockZone';
+import { KitchenZone } from './KitchenZone';
+import { Tickets } from './Tickets';
 
-/**
- * The four zones of a venue. P2 lays them out as footprints; P3 fills them
- * with the bar, cool room, kitchen and dock objects.
- */
+/** The four zones of a venue, cut away so all are visible at once. */
 export function VenueDiorama({ venue, focused }: { venue: Venue; focused: boolean }) {
-  void venue;
-  void focused;
-  const zones: { key: keyof typeof ZONE_OFFSET; colour: string; label: string }[] = [
-    { key: 'bar', colour: P.purple, label: 'Bar' },
-    { key: 'coolroom', colour: P.sky, label: 'Cool room' },
-    { key: 'kitchen', colour: P.orange, label: 'Kitchen' },
-    { key: 'dock', colour: P.charcoal, label: 'Dock' },
-  ];
   return (
     <group>
-      {zones.map((z) => {
-        const [x, , zz] = ZONE_OFFSET[z.key];
-        return (
-          <mesh key={z.key} position={[x, 0.3, zz]} castShadow receiveShadow>
-            <boxGeometry args={[2.6, 0.6, 2.2]} />
-            <meshStandardMaterial color={z.colour} roughness={0.85} />
-          </mesh>
-        );
-      })}
-      {/* sign post */}
-      <mesh position={[0, 1.2, 0]}>
-        <boxGeometry args={[0.12, 2.4, 0.12]} />
-        <meshStandardMaterial color={P.lilac} />
-      </mesh>
-      <mesh position={[0, 2.5, 0]}>
-        <boxGeometry args={[1.8, 0.5, 0.1]} />
-        <meshStandardMaterial color={P.yellow} emissive={P.yellow} emissiveIntensity={0.6} />
-      </mesh>
+      <BarZone venueId={venue.id} focused={focused} />
+      <CoolRoomZone venueId={venue.id} focused={focused} />
+      <KitchenZone venueId={venue.id} focused={focused} />
+      <DockZone venueId={venue.id} focused={focused} />
+      <Tickets venueId={venue.id} />
+      {/* a crooked neon sign so the place feels a bit absurd */}
+      <group position={[0.15, 2.3, 0]} rotation-z={0.06}>
+        <mesh position={[0, -0.9, 0]}>
+          <boxGeometry args={[0.1, 1.8, 0.1]} />
+          <Mat colour={P.lilac} />
+        </mesh>
+        <mesh>
+          <boxGeometry args={[2.0, 0.5, 0.1]} />
+          <Mat colour={P.purple} emissive={P.purple} emissiveIntensity={0.7} />
+        </mesh>
+        <mesh position={[0, 0, 0.06]}>
+          <boxGeometry args={[1.7, 0.18, 0.01]} />
+          <Mat colour={P.yellow} emissive={P.yellow} emissiveIntensity={1} />
+        </mesh>
+      </group>
     </group>
   );
 }

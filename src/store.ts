@@ -15,6 +15,12 @@ export type Selection =
   | { kind: 'feature'; featureId: string }
   | { kind: 'ticket'; orderId: string; venueId: string };
 
+export interface HoverTip {
+  text: string;
+  x: number;
+  y: number;
+}
+
 export interface SimStore {
   runner: ScenarioRunner;
   /** Bumps whenever the world changes; components subscribe to this. */
@@ -25,6 +31,7 @@ export interface SimStore {
   scenarioId: string;
   camera: CameraBeat;
   selection: Selection | null;
+  hover: HoverTip | null;
   debugOpen: boolean;
 
   setScenario: (id: string) => void;
@@ -37,6 +44,7 @@ export interface SimStore {
   stepTicks: (n: number) => void;
   setCamera: (beat: CameraBeat) => void;
   select: (s: Selection | null) => void;
+  setHover: (h: HoverTip | null) => void;
   toggleDebug: () => void;
 }
 
@@ -58,6 +66,7 @@ export const useSim = create<SimStore>((set, get) => {
     scenarioId: first.id,
     camera: { view: 'world' },
     selection: null,
+    hover: null,
     debugOpen: false,
 
     setScenario: (id) => {
@@ -85,6 +94,7 @@ export const useSim = create<SimStore>((set, get) => {
     },
     setCamera: (beat) => set({ camera: beat }),
     select: (selection) => set({ selection }),
+    setHover: (hover) => set({ hover }),
     toggleDebug: () => set((s) => ({ debugOpen: !s.debugOpen })),
   };
 });

@@ -148,3 +148,6 @@ td.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
 .label-layer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .label-anchor { position: absolute; left: 0; top: 0; will-change: transform; transform-origin: 50% 100%; }
 .brand { white-space: nowrap; }
+.zone-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lilac); background: rgba(26,15,51,0.85); padding: 2px 8px; border-radius: 6px; }
+.pot-label { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text); background: rgba(26,15,51,0.9); border: 1px solid var(--card-border); padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+.pot-label.heat-soldout { border-color: var(--red); color: var(--red); }
