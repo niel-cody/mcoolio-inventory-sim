@@ -1,14 +1,25 @@
-import { Html } from '@react-three/drei';
 import { useState } from 'react';
 import { useSim } from '../../store';
 import type { Supplier } from '../../sim/types';
 import { DEPOT_POSITIONS, P } from '../palette';
+import { useLabel } from '../useLabel';
 
 export function SupplierDepot({ supplier }: { supplier: Supplier }) {
   const [x, z] = DEPOT_POSITIONS[supplier.id] ?? [0, 0];
   const [hover, setHover] = useState(false);
   const select = useSim((s) => s.select);
   const colour = supplier.colour ?? P.amber;
+  useLabel(
+    `supplier:${supplier.id}`,
+    [x, 2.8, z],
+    () => (
+      <div className="depot-label" style={{ borderColor: colour }}>
+        <div className="island-name">{supplier.name}</div>
+        <div className="island-sub">Supplier · {supplier.type.toLowerCase()}</div>
+      </div>
+    ),
+    { maxDistance: 70 },
+  );
   return (
     <group position={[x, 0, z]}>
       <group
@@ -54,12 +65,6 @@ export function SupplierDepot({ supplier }: { supplier: Supplier }) {
         ))}
         <pointLight position={[0, 2.4, 1.2]} color={colour} intensity={4} distance={7} decay={2} />
       </group>
-      <Html position={[0, 2.9, 0]} center distanceFactor={26} zIndexRange={[10, 0]} style={{ pointerEvents: 'none' }}>
-        <div className="depot-label" style={{ borderColor: colour }}>
-          <div className="island-name">{supplier.name}</div>
-          <div className="island-sub">Supplier · {supplier.type.toLowerCase()}</div>
-        </div>
-      </Html>
     </group>
   );
 }

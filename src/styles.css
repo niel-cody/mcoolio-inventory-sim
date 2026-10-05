@@ -144,3 +144,7 @@ td.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
 .island-sub { font-size: 11px; color: var(--muted); }
 .island-soldout { color: var(--red); font-weight: 700; }
 .depot-label { border-width: 1px; }
+
+.label-layer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.label-anchor { position: absolute; left: 0; top: 0; will-change: transform; transform-origin: 50% 100%; }
+.brand { white-space: nowrap; }

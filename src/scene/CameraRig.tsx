@@ -7,8 +7,8 @@ import { useSim } from '../store';
 import { useWorld } from './useWorld';
 import type { Zone } from '../sim/types';
 
-const WORLD_POS = new Vector3(0, 30, 30);
-const WORLD_LOOK = new Vector3(0, 0, 0);
+const WORLD_POS = new Vector3(0, 27, 25);
+const WORLD_LOOK = new Vector3(-1, 0, -2);
 
 /** Zone centres relative to an island, matching the diorama layout. */
 export const ZONE_OFFSET: Record<Zone, [number, number, number]> = {

@@ -25,5 +25,5 @@ export const HEAT_COLOUR = { healthy: P.green, warning: P.amber, soldout: P.red 
 export const DEPOT_POSITIONS: Record<string, [number, number]> = {
   sup_harbour: [15, -9],
   sup_nightowl: [-16, -9],
-  sup_spiceroute: [-2, 15],
+  sup_spiceroute: [-19, 7],
 };

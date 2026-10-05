@@ -1,4 +1,3 @@
-import { Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import type { Group, Mesh } from 'three';
@@ -7,6 +6,7 @@ import type { Venue } from '../../sim/types';
 import { HEAT_COLOUR, P } from '../palette';
 import { useWorld } from '../useWorld';
 import { VenueDiorama } from '../venue/VenueDiorama';
+import { useLabel } from '../useLabel';
 
 export function VenueIsland({ venue, index }: { venue: Venue; index: number }) {
   const world = useWorld();
@@ -32,6 +32,21 @@ export function VenueIsland({ venue, index }: { venue: Venue; index: number }) {
   });
 
   const rotation = [0, index * 0.35 - 0.3, 0] as [number, number, number];
+
+  useLabel(
+    `venue:${venue.id}`,
+    [x, 3.4, z],
+    () => (
+      <div className={`island-label heat-${heat}`}>
+        <div className="island-name">{venue.name}</div>
+        <div className="island-sub">
+          {venue.character}
+          {soldOut > 0 && <span className="island-soldout"> · {soldOut} sold out</span>}
+        </div>
+      </div>
+    ),
+    { enabled: !focused, maxDistance: 70 },
+  );
 
   return (
     <group position={[x, 0, z]}>
@@ -82,17 +97,6 @@ export function VenueIsland({ venue, index }: { venue: Venue; index: number }) {
         <ringGeometry args={[5.6, 7.2, 64]} />
         <meshBasicMaterial color={HEAT_COLOUR[heat]} transparent opacity={heat === 'healthy' ? 0.06 : 0.16} />
       </mesh>
-      {!focused && (
-        <Html position={[0, 3.6, 0]} center distanceFactor={26} zIndexRange={[10, 0]} style={{ pointerEvents: 'none' }}>
-          <div className={`island-label heat-${heat}`}>
-            <div className="island-name">{venue.name}</div>
-            <div className="island-sub">
-              {venue.character}
-              {soldOut > 0 && <span className="island-soldout"> · {soldOut} sold out</span>}
-            </div>
-          </div>
-        </Html>
-      )}
     </group>
   );
 }

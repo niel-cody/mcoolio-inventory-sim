@@ -1,6 +1,7 @@
 import { CaptionBar } from './hud/CaptionBar';
 import { DebugPanel } from './hud/DebugPanel';
 import { TopBar } from './hud/TopBar';
+import { LabelLayer } from './scene/LabelLayer';
 import { SceneRoot } from './scene/SceneRoot';
 import { useSim } from './store';
 
@@ -9,6 +10,7 @@ export default function App() {
   return (
     <div className="app">
       <SceneRoot />
+      <LabelLayer />
       <div className="hud">
         <TopBar />
         <CaptionBar />

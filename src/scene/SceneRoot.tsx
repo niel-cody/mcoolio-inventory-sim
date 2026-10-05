@@ -2,6 +2,7 @@ import { Canvas } from '@react-three/fiber';
 import { Suspense } from 'react';
 import { useSim } from '../store';
 import { CameraRig } from './CameraRig';
+import { LabelProjector } from './LabelLayer';
 import { P } from './palette';
 import { WorldView } from './world/WorldView';
 
@@ -11,7 +12,7 @@ export function SceneRoot() {
     <Canvas
       shadows
       dpr={[1, 1.75]}
-      camera={{ position: [0, 30, 30], fov: 38, near: 0.5, far: 200 }}
+      camera={{ position: [0, 27, 25], fov: 38, near: 0.5, far: 200 }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       onPointerMissed={() => select(null)}
       style={{ position: 'absolute', inset: 0 }}
@@ -36,6 +37,7 @@ export function SceneRoot() {
         <WorldView />
       </Suspense>
       <CameraRig />
+      <LabelProjector />
     </Canvas>
   );
 }
