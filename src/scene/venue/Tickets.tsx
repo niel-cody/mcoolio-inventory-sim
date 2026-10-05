@@ -23,6 +23,9 @@ const FLIGHT = 1.3;
 const FADE = 0.35;
 const MAX_PIECES = 48;
 
+/** Dev counter so a test harness can confirm tickets are spawning. */
+export const ticketStats = { spawned: 0 };
+
 const ZONE_COLOUR: Record<Zone, string> = { bar: P.lilac, coolroom: P.sky, kitchen: P.orange, dock: P.yellow };
 
 /** Order tickets rise from the POS terminal and split towards the zones they deplete. */
@@ -50,6 +53,7 @@ export function Tickets({ venueId }: { venueId: string }) {
           // A void or refund: one ticket, red, rising straight up and fading.
           next.push({ id: `${e.orderId}:${e.action}`, orderId: e.orderId, itemId: '', start: now, from, to: from.clone().add(new Vector3(0, 1.4, 0)), colour: e.action === 'RELEASE' ? P.sky : P.red });
         }
+        ticketStats.spawned += next.length;
         setPieces((prev) => [...prev, ...next].slice(-MAX_PIECES));
       },
       [venueId, world],

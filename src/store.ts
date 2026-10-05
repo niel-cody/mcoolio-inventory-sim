@@ -99,29 +99,30 @@ export const useSim = create<SimStore>((set, get) => {
   };
 });
 
-/** Drives the sim from requestAnimationFrame. 1x = one sim minute per real second. */
+/**
+ * Drives the sim from a timer, not requestAnimationFrame, so a throttled or
+ * background tab keeps sim time honest. 1x = one sim minute per real second.
+ */
 export function startLoop(): () => void {
   let last = performance.now();
   let carry = 0;
-  let frame = 0;
-  const tickLoop = (now: number) => {
+  const id = window.setInterval(() => {
+    const now = performance.now();
     const { playing, speed, runner } = useSim.getState();
-    // Cap at one second so a throttled background tab catches up instead of crawling.
+    // Cap at one second so a long stall catches up instead of lurching.
     const dt = Math.min(1, (now - last) / 1000);
     last = now;
-    if (playing && !runner.done) {
-      carry += dt * speed;
-      const ticks = Math.floor(carry);
-      if (ticks > 0) {
-        carry -= ticks;
-        runner.advance(ticks);
-        useSim.setState((s) => ({ version: s.version + 1 }));
-      }
-    } else {
+    if (!playing || runner.done) {
       carry = 0;
+      return;
     }
-    frame = requestAnimationFrame(tickLoop);
-  };
-  frame = requestAnimationFrame(tickLoop);
-  return () => cancelAnimationFrame(frame);
+    carry += dt * speed;
+    const ticks = Math.floor(carry);
+    if (ticks > 0) {
+      carry -= ticks;
+      runner.advance(ticks);
+      useSim.setState((s) => ({ version: s.version + 1 }));
+    }
+  }, 50);
+  return () => window.clearInterval(id);
 }
