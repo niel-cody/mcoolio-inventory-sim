@@ -34,7 +34,9 @@ export interface Scenario {
   /** What the person at the keyboard should try while it plays. */
   tryThis: string;
   /** Speed the picker starts at. */
-  suggestedSpeed: 1 | 4 | 16;
+  suggestedSpeed: 1 | 4 | 16 | 64;
+  /** Clock hour at tick 0. Defaults to 17:00 on Friday. */
+  startHour?: number;
   /** Adjusts the freshly seeded world before any step runs (opening counts and the like). */
   setup?: (world: SimWorld) => void;
   steps: ScenarioStep[];
@@ -42,6 +44,7 @@ export interface Scenario {
 
 export interface RunnerListeners {
   onCamera?: (beat: CameraBeat) => void;
+  onSpeed?: (speed: 1 | 4 | 16 | 64) => void;
   onDone?: () => void;
 }
 
@@ -73,8 +76,10 @@ export class ScenarioRunner {
 
   private load(): SimWorld {
     const world = this.build(seedFor(this.scenario), this.mode);
+    if (this.scenario.startHour !== undefined) world.clockOffset = this.scenario.startHour * 60;
     world.events.on((e) => {
       if (e.type === 'camera') this.listeners.onCamera?.({ view: e.view, venueId: e.venueId, zone: e.zone });
+      if (e.type === 'speed' && !this.seeking) this.listeners.onSpeed?.(e.speed);
     });
     if (this.scenario.setup) {
       this.scenario.setup(world);

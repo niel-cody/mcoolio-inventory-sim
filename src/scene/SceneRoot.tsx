@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { useSim } from '../store';
 import { CameraRig } from './CameraRig';
 import { LabelProjector } from './LabelLayer';
-import { P } from './palette';
+import { SkyAndSun } from './SkyAndSun';
 import { WorldView } from './world/WorldView';
 
 export function SceneRoot() {
@@ -20,22 +20,7 @@ export function SceneRoot() {
       }}
       style={{ position: 'absolute', inset: 0 }}
     >
-      <color attach="background" args={[P.night]} />
-      <fog attach="fog" args={[P.night, 45, 110]} />
-      <ambientLight intensity={0.35} color="#8a6cff" />
-      <hemisphereLight args={['#5a3aa6', '#0d0719', 0.5]} />
-      <directionalLight
-        position={[18, 28, 10]}
-        intensity={1.1}
-        color="#d9c6ff"
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-camera-left={-35}
-        shadow-camera-right={35}
-        shadow-camera-top={35}
-        shadow-camera-bottom={-35}
-        shadow-bias={-0.0004}
-      />
+      <SkyAndSun />
       <Suspense fallback={null}>
         <WorldView />
       </Suspense>

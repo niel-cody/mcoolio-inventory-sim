@@ -6,7 +6,7 @@ import { hitZero, onceWhen } from './helpers';
 import { FITZROY_PROFILE, NEWTOWN_PROFILE, VALLEY_PROFILE } from './profiles';
 
 // Cocktail night: the kitchen is quiet, so the only story at Fitzroy is the pour pool.
-const FITZROY_HARD = { ...FITZROY_PROFILE, ordersPerTick: 0.6, weights: { [PRODUCT.martini]: 9, [PRODUCT.double]: 6, [PRODUCT.nip]: 3, [PRODUCT.kingfisher]: 3 } };
+const FITZROY_HARD = { ...FITZROY_PROFILE, hours: undefined, ordersPerTick: 0.7, weights: { [PRODUCT.martini]: 9, [PRODUCT.double]: 6, [PRODUCT.nip]: 3, [PRODUCT.kingfisher]: 3 } };
 
 export const the86: Scenario = {
   id: 'the-86',
@@ -14,18 +14,18 @@ export const the86: Scenario = {
   title: 'The 86',
   strap: 'Fitzroy pours Absolut hard. The pour pool hits zero and the martini, Nip and Double go down at Fitzroy only.',
   featureIds: ['depletion-engine', 'sold-out-flag', 'ai-stock-manager', 'ingredient-swap', 'transfers', 'waste-capture'],
-  durationTicks: 220,
+  durationTicks: 270,
   youWillSee: ['Fitzroy pours Absolut hard until the pour pool hits zero.', 'Nip, Double and the martini go down at Fitzroy only; the other venues stay green.', 'In Where we\'re going, Ngara suggests a swap and a transfer, and the bar records the dregs as waste.'],
   tryThis: 'Watch the heat rings in the world view, then flip to Where we\'re going and replay.',
   suggestedSpeed: 4,
   steps: [
-    { at: 0, camera: { view: 'venue', venueId: VENUE.fitzroy, zone: 'bar' }, caption: 'Fitzroy on a big night. Five bottles of Absolut on the shelf, 3,500 mL.' },
+    { at: 0, camera: { view: 'venue', venueId: VENUE.fitzroy, zone: 'bar' }, caption: 'Fitzroy on a big night. Eight bottles of Absolut on the shelf, 5,600 mL.' },
     {
       at: 1,
       run: (w) => {
-        runService(w, VENUE.fitzroy, FITZROY_HARD, 220);
-        runService(w, VENUE.newtown, NEWTOWN_PROFILE, 220);
-        runService(w, VENUE.valley, VALLEY_PROFILE, 220);
+        runService(w, VENUE.fitzroy, FITZROY_HARD, 270);
+        runService(w, VENUE.newtown, NEWTOWN_PROFILE, 270);
+        runService(w, VENUE.valley, VALLEY_PROFILE, 270);
         onceWhen(w, hitZero(ITEM.absolut, VENUE.fitzroy), (world) => {
           world.caption('Absolut at Fitzroy: zero. Newtown and the Valley still have theirs.');
           if (world.featurePlays('sold-out-flag')) {
@@ -70,7 +70,7 @@ export const the86: Scenario = {
     },
     { at: 30, caption: 'Every Nip is 30 mL, every Double 60 mL, every martini 45 mL, all off one pour pool.', featureId: 'recipes-variants' },
     {
-      at: 196,
+      at: 246,
       camera: { view: 'venue', venueId: VENUE.fitzroy, zone: 'bar' },
       caption: 'Close. The opened Grey Goose has 60 mL of dregs. The bar records it as waste, so the count tomorrow is honest.',
       featureId: 'waste-capture',
@@ -79,6 +79,6 @@ export const the86: Scenario = {
         if (w.stock.onHand(ITEM.greygoose, VENUE.fitzroy) >= toBase(60)) w.waste(ITEM.greygoose, VENUE.fitzroy, toBase(60), 'Dregs at close');
       },
     },
-    { at: 208, camera: { view: 'world' }, caption: 'End of the night. Compare the rings.' },
+    { at: 260, camera: { view: 'world' }, caption: 'End of the night. Compare the rings.' },
   ],
 };

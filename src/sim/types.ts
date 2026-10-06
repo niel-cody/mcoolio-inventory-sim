@@ -206,8 +206,10 @@ export interface Supplier {
   id: string;
   name: string;
   type: SupplierType;
-  /** Ticks from send to arrival at the dock. */
-  leadTimeTicks: number;
+  /** Ticks on the road once dispatched. Dispatch is 07:00 the day after the order is sent. */
+  transitTicks: number;
+  /** Hour the truck leaves the depot. */
+  dispatchHour: number;
   /** Demo colour hint. */
   colour?: string;
 }

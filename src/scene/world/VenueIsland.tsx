@@ -21,6 +21,7 @@ export function VenueIsland({ venue, index }: { venue: Venue; index: number }) {
   const focused = beat.view === 'venue' && beat.venueId === venue.id;
 
   const heat = world.availability.venueHeat(venue.id);
+  const night = 1 - world.daylight();
   const soldOut = world.availability.soldOutProducts(venue.id).length;
   const [x, z] = venue.position;
 
@@ -91,7 +92,7 @@ export function VenueIsland({ venue, index }: { venue: Venue; index: number }) {
           <VenueDiorama venue={venue} focused={focused} />
         </IslandContext.Provider>
         {/* warm venue-at-night light */}
-        <pointLight position={[0, 3.5, 0]} color={P.warm} intensity={focused ? 14 : 7} distance={12} decay={2} />
+        <pointLight position={[0, 3.5, 0]} color={P.warm} intensity={(focused ? 14 : 7) * (0.15 + 0.85 * night)} distance={12} decay={2} />
       </group>
       {/* heat ring sits flat on the ground plane, no bob */}
       <mesh ref={ring} rotation-x={-Math.PI / 2} position={[0, 0.03, 0]}>

@@ -75,7 +75,10 @@ export class AvailabilityIndex {
     let worst: HeatLevel = 'healthy';
     for (const item of this.catalogue.items.values()) {
       if (item.itemType === 'NON_STOCKED') continue;
-      if (!this.stock.levels.has(`${item.id}@${locationId}`)) continue;
+      const lvl = this.stock.levels.get(`${item.id}@${locationId}`);
+      if (!lvl) continue;
+      // A level with no thresholds and nothing in it was only ever looked at, never stocked.
+      if (lvl.qtyOnHand === 0 && lvl.reorderPoint === undefined) continue;
       const h = this.itemHeat(item.id, locationId);
       if (h === 'soldout') return 'soldout';
       if (h === 'warning') worst = 'warning';

@@ -1,5 +1,6 @@
 import type { SimWorld } from './world';
 import type { OrderItem } from './types';
+import { withinHours } from './clock';
 
 /**
  * The Friday service order generator. Pure function of the world's seeded RNG,
@@ -16,6 +17,8 @@ export interface ServiceProfile {
   voidChance?: number;
   refundChance?: number;
   maxLines?: number;
+  /** Trading windows as [open, close] hours; close may be past midnight. Absent means always open. */
+  hours?: [number, number][];
 }
 
 export interface ServiceHandle {
@@ -26,8 +29,10 @@ export function runService(world: SimWorld, locationId: string, profile: Service
   let stopped = false;
   const stepTask = (w: SimWorld): void => {
     if (stopped || w.tick > untilTick) return;
-    const n = w.rng.poisson(profile.ordersPerTick);
-    for (let i = 0; i < n; i++) placeOrder(w, locationId, profile);
+    if (isOpen(w.hour(), profile)) {
+      const n = w.rng.poisson(profile.ordersPerTick);
+      for (let i = 0; i < n; i++) placeOrder(w, locationId, profile);
+    }
     w.after(1, stepTask);
   };
   world.after(1, stepTask);
@@ -63,4 +68,9 @@ export function placeOrder(world: SimWorld, locationId: string, profile: Service
   if (rng.chance(profile.voidChance ?? 0.03)) opts.voidAfter = rng.int(1, Math.max(1, completeAfter - 1));
   else if (rng.chance(profile.refundChance ?? 0.015)) opts.refundAfter = rng.int(3, 12);
   return world.sell(locationId, items, opts);
+}
+
+export function isOpen(hour: number, profile: ServiceProfile): boolean {
+  if (!profile.hours || profile.hours.length === 0) return true;
+  return profile.hours.some(([open, close]) => withinHours(hour, open, close));
 }

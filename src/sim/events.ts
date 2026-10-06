@@ -16,7 +16,8 @@ export type SimEvent =
   | { type: 'sold_out'; tick: number; posId: string; locationId: string; on: boolean }
   | { type: 'suggestion'; tick: number; locationId: string; featureId: FeatureId; text: string }
   | { type: 'caption'; tick: number; text: string; featureId?: FeatureId }
-  | { type: 'camera'; tick: number; view: 'world' | 'venue'; venueId?: string; zone?: Zone };
+  | { type: 'camera'; tick: number; view: 'world' | 'venue'; venueId?: string; zone?: Zone }
+  | { type: 'speed'; tick: number; speed: 1 | 4 | 16 | 64 };
 
 export type SimEventType = SimEvent['type'];
 

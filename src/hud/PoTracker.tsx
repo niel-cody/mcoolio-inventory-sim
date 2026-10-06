@@ -1,5 +1,4 @@
 import { useWorld } from '../scene/useWorld';
-import { formatTick } from '../sim/clock';
 import type { PurchaseOrder, PurchaseOrderStatus } from '../sim/types';
 import { useSim } from '../store';
 import { FeaturePill } from './DebugPanel';
@@ -29,7 +28,7 @@ export function Tracker({ po }: { po: PurchaseOrder }) {
               {s.label}
               {s.key === 'IN_TRANSIT' && i === idx && arrived ? ' · at the dock' : ''}
             </div>
-            <div className="tracker-time">{t !== undefined && (i <= idx || s.key === 'IN_TRANSIT') ? formatTick(t).slice(4) : ''}</div>
+            <div className="tracker-time">{t !== undefined && (i <= idx || s.key === 'IN_TRANSIT') ? world.fmt(t).slice(4) : ''}</div>
           </div>
         );
       })}

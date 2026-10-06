@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { FEATURES, featureStatusLabel, type FeatureId } from '../features';
 import { SCENARIOS } from '../scenarios';
-import { formatTick } from '../sim/clock';
 import type { SimEvent } from '../sim/events';
 import type { PurchaseOrderStatus, Venue } from '../sim/types';
 import { useSim, type Speed } from '../store';
@@ -35,7 +34,7 @@ export function DebugPanel() {
         <h1>
           McOolio <span>Inventory Sim</span>
         </h1>
-        <span className="clock">{formatTick(world.tick)}</span>
+        <span className="clock">{world.fmt()}</span>
         <button className="btn" onClick={togglePlay}>
           {playing ? 'Pause' : runner.done ? 'Done' : 'Play'}
         </button>
@@ -209,7 +208,7 @@ export function Feed({ events }: { events: SimEvent[] }) {
   return (
     <div className="feed">
       {rows.map((e, i) => {
-        const t = formatTick(e.tick).slice(4);
+        const t = world.fmt(e.tick).slice(4);
         switch (e.type) {
           case 'order':
             return (
@@ -245,6 +244,7 @@ export function Feed({ events }: { events: SimEvent[] }) {
           case 'caption':
             return <Row key={i} t={t} cls="caption" text={e.text} />;
           case 'camera':
+          case 'speed':
             return null;
         }
       })}

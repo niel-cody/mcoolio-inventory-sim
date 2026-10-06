@@ -310,3 +310,8 @@ td.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
   .deck-caption { font-size: 20px; }
   .rail .feed-row { font-size: 13px; }
 }
+
+.deck-daynight { display: flex; background: rgba(255,255,255,0.06); border: 1px solid var(--card-border); border-radius: 999px; padding: 3px; margin-left: 8px; }
+.deck-daynight button { background: transparent; border: 0; color: var(--muted); font-size: 14px; padding: 2px 9px; border-radius: 999px; }
+.deck-daynight button.on { background: var(--yellow); color: var(--charcoal); }
+.deck-daynight button:hover { color: var(--text); }

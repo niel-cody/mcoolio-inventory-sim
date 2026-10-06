@@ -6,7 +6,7 @@ import { SCENARIOS, scenarioById } from './index';
 const build = (seed: number, mode: 'today' | 'roadmap') => createMcOolioWorld(seed, mode);
 
 describe('scenarios', () => {
-  it('all seven run to completion in both modes without throwing', () => {
+  it('every playbook runs to completion in both modes without throwing', () => {
     for (const s of SCENARIOS) {
       for (const mode of ['today', 'roadmap'] as const) {
         const r = new ScenarioRunner(build, s, mode);
@@ -31,7 +31,7 @@ describe('scenarios', () => {
 
   it('the 86 goes red at Fitzroy only, and Today never flags sold out', () => {
     const today = new ScenarioRunner(build, scenarioById('the-86'), 'today');
-    today.advance(200);
+    today.advance(270);
     const w = today.world;
     expect(w.availability.of(PRODUCT.martini, VENUE.fitzroy).soldOut).toBe(true);
     expect(w.availability.of(PRODUCT.martini, VENUE.newtown).soldOut).toBe(false);
@@ -41,7 +41,7 @@ describe('scenarios', () => {
     expect(w.events.log.some((e) => e.type === 'transfer')).toBe(false);
 
     const roadmap = new ScenarioRunner(build, scenarioById('the-86'), 'roadmap');
-    roadmap.advance(200);
+    roadmap.advance(270);
     const log = roadmap.world.events.log;
     expect(log.some((e) => e.type === 'sold_out' && e.locationId === VENUE.fitzroy && e.on)).toBe(true);
     expect(log.some((e) => e.type === 'sold_out' && e.locationId === VENUE.newtown && e.posId === PRODUCT.martini)).toBe(false);
@@ -56,7 +56,7 @@ describe('scenarios', () => {
   it('the ordering cycle reaches POSTED and stock comes back up', () => {
     for (const mode of ['today', 'roadmap'] as const) {
       const r = new ScenarioRunner(build, scenarioById('ordering-cycle'), mode);
-      r.advance(360);
+      r.advance(1080);
       const statuses = r.world.events.log.filter((e) => e.type === 'po').map((e) => (e.type === 'po' ? e.status : ''));
       expect(statuses, mode).toEqual(['DRAFT', 'SENT', 'IN_TRANSIT', 'ARRIVED', 'RECEIVED', 'POSTED']);
       const po = r.world.purchasing.list(VENUE.valley)[0];
@@ -89,7 +89,7 @@ describe('seeking', () => {
     r.seekTo(150);
     expect(r.world.events.log.map((e) => JSON.stringify(e))).toEqual(atOneFifty);
     r.seekTo(10_000);
-    expect(r.world.tick).toBe(220);
+    expect(r.world.tick).toBe(270);
     expect(r.done).toBe(true);
   });
 
@@ -100,5 +100,30 @@ describe('seeking', () => {
       expect(s.youWillSee.length, s.id).toBe(3);
       expect(s.tryThis.length, s.id).toBeGreaterThan(10);
     }
+  });
+});
+
+describe('the long weekend', () => {
+  it('trades in hours, orders at close, delivers next morning, and ends with nothing sold out', () => {
+    const r = new ScenarioRunner(build, scenarioById('long-weekend'), 'today');
+    r.advance(r.scenario.durationTicks);
+    const w = r.world;
+    const orders = w.events.log.filter((e) => e.type === 'order' && e.action === 'COMMIT');
+    // Nothing sells between 02:00 and 11:00 anywhere.
+    expect(orders.some((e) => { const h = w.hour(e.tick); return h >= 2 && h < 11; })).toBe(false);
+    const pos = w.purchasing.list();
+    expect(pos.length).toBeGreaterThan(2);
+    expect(pos.every((p) => p.status === 'POSTED')).toBe(true);
+    // Every order was sent at night and dispatched the next morning at the supplier's hour.
+    for (const p of pos) {
+      const sup = w.catalogue.suppliers.get(p.supplierId)!;
+      expect(Math.abs(w.hour(p.inTransitTick!) - sup.dispatchHour)).toBeLessThan(0.02);
+      expect(w.clock(p.inTransitTick!) - w.clock(p.sentTick!)).toBeLessThan(24 * 60);
+    }
+    for (const v of w.catalogue.venueList()) expect(w.availability.venueHeat(v.id), v.name).not.toBe('soldout');
+    expect(w.events.log.filter((e) => e.type === 'production' && e.phase === 'completed').length).toBe(7);
+    // Daylight follows the clock: full day at Saturday noon, night at Saturday 23:00.
+    expect(w.daylight(r.scenario.steps.find((s) => s.caption?.startsWith('Saturday lunch'))!.at)).toBe(1);
+    expect(w.daylight(r.scenario.steps.find((s) => s.caption?.startsWith('Midnight'))!.at)).toBe(0);
   });
 });

@@ -21,8 +21,11 @@ export class Purchasing {
     private readonly events: EventBus,
   ) {}
 
-  bindClock(now: () => number): void {
+  private nextTickAtHour: (hour: number, from: number) => number = (hour, from) => from + hour * 60;
+
+  bindClock(now: () => number, nextTickAtHour?: (hour: number, from: number) => number): void {
     this.now = now;
+    if (nextTickAtHour) this.nextTickAtHour = nextTickAtHour;
   }
 
   list(locationId?: string): PurchaseOrder[] {
@@ -58,9 +61,9 @@ export class Purchasing {
     const supplier = this.catalogue.suppliers.get(po.supplierId)!;
     po.status = 'SENT';
     po.sentTick = this.now();
-    // Supplier picks within a quarter of the lead time, then the truck rolls.
-    po.inTransitTick = po.sentTick + Math.max(1, Math.round(supplier.leadTimeTicks * 0.25));
-    po.etaTick = po.sentTick + supplier.leadTimeTicks;
+    // The supplier picks overnight; the truck leaves the depot at its dispatch hour the next day.
+    po.inTransitTick = this.nextTickAtHour(supplier.dispatchHour, po.sentTick);
+    po.etaTick = po.inTransitTick + supplier.transitTicks;
     this.events.emit({ type: 'po', tick: this.now(), poId: po.id, status: 'SENT', locationId: po.locationId, supplierId: po.supplierId });
     return po;
   }

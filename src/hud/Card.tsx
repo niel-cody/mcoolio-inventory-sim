@@ -1,7 +1,7 @@
 import { FEATURES, featureStatusLabel, type FeatureId } from '../features';
 import { useWorld } from '../scene/useWorld';
 import { toDecimal } from '../sim/baseunits';
-import { formatDuration, formatTick } from '../sim/clock';
+import { formatDuration } from '../sim/clock';
 import type { InventoryItem, PurchaseOrder, Supplier, Venue } from '../sim/types';
 import { useSim, type Selection } from '../store';
 import { FeaturePill } from './DebugPanel';
@@ -84,7 +84,7 @@ function ItemCard({ item, venue }: { item: InventoryItem; venue: Venue }) {
         </Row>
       )}
       <Row label="Average cost">{avgCost(world.stock.averageCostMinorPerUnit(item.id, venue.id), item)}</Row>
-      <Row label="Last received">{lastIn ? `${formatTick(lastIn.tick)} · ${lastIn.type.replace('_', ' ').toLowerCase()}` : 'Opening stock'}</Row>
+      <Row label="Last received">{lastIn ? `${world.fmt(lastIn.tick)} · ${lastIn.type.replace('_', ' ').toLowerCase()}` : 'Opening stock'}</Row>
       <Row label="Open PO">{openPo ? `${openPo.number} · ${openPo.status.replace('_', ' ').toLowerCase()}` : 'None'}</Row>
       {supplier && <Row label="Supplier">{supplier.name}</Row>}
       {item.itemType === 'BATCH' && (
@@ -110,7 +110,7 @@ function ItemCard({ item, venue }: { item: InventoryItem; venue: Venue }) {
           <div className="card-label">Recent movements</div>
           {recent.map((m) => (
             <div key={m.id} className="mono small">
-              {formatTick(m.tick).slice(4)} {m.qtyDelta > 0 ? '+' : ''}
+              {world.fmt(m.tick).slice(4)} {m.qtyDelta > 0 ? '+' : ''}
               {num(toDecimal(m.qtyDelta), 1)} {m.type.replace('_', ' ').toLowerCase()}
             </div>
           ))}
@@ -166,7 +166,7 @@ function SupplierCard({ supplier }: { supplier: Supplier }) {
         </div>
         <FeaturePill id="suppliers" />
       </div>
-      <Row label="Lead time">{formatDuration(supplier.leadTimeTicks)}</Row>
+      <Row label="Delivery">Dispatched {String(Math.floor(supplier.dispatchHour)).padStart(2, '0')}:{String(Math.round((supplier.dispatchHour % 1) * 60)).padStart(2, '0')} next day, {formatDuration(supplier.transitTicks)} on the road</Row>
       <Row label="Supplies">{items.map((i) => i.name).join(', ')}</Row>
       <Row label="Open POs">{open.length ? open.map((p) => `${p.number} (${p.status.replace('_', ' ').toLowerCase()})`).join(', ') : 'None'}</Row>
     </>
@@ -224,7 +224,7 @@ function PoCard({ po }: { po: PurchaseOrder }) {
           Credit note raised <FeaturePill id="credit-notes" />
         </Row>
       )}
-      {po.etaTick !== undefined && po.status === 'IN_TRANSIT' && <Row label="Due">{formatTick(po.etaTick)}</Row>}
+      {po.etaTick !== undefined && po.status === 'IN_TRANSIT' && <Row label="Due">{world.fmt(po.etaTick)}</Row>}
     </>
   );
 }
@@ -275,7 +275,7 @@ function TicketCard({ orderId, venueId }: { orderId: string; venueId: string }) 
         <div>
           <div className="card-title">Order {orderId}</div>
           <div className="muted small">
-            {venue?.name} · {formatTick(latest.tick)}
+            {venue?.name} · {world.fmt(latest.tick)}
           </div>
         </div>
         <FeaturePill id="depletion-engine" />

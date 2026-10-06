@@ -11,6 +11,7 @@ import { Stocktakes } from './stocktake';
 import type { BaseUnits } from './baseunits';
 import type { OrderEvent, OrderItem, Zone } from './types';
 import { FEATURES, featurePlays, type FeatureId, type SimMode } from '../features';
+import { DEFAULT_START_HOUR, TICKS_PER_DAY, clockMinutes, daylight, formatClock, hourOfDay } from './clock';
 
 export interface ScheduledTask {
   tick: number;
@@ -33,6 +34,8 @@ export interface SoldTicket {
  */
 export class SimWorld {
   tick = 0;
+  /** Minutes from Friday 00:00 to tick 0. Scenarios set this through their start hour. */
+  clockOffset = DEFAULT_START_HOUR * 60;
   readonly rng: Rng;
   readonly events = new EventBus();
   readonly catalogue = new Catalogue();
@@ -65,7 +68,7 @@ export class SimWorld {
     this.availability = new AvailabilityIndex(this.catalogue, this.recipes, this.stock);
     const now = () => this.tick;
     this.stock.bindClock(now);
-    this.purchasing.bindClock(now);
+    this.purchasing.bindClock(now, (hour, from) => this.nextTickAtHour(hour, from));
     this.production.bindClock(now);
     this.stocktakes.bindClock(now);
   }
@@ -87,6 +90,37 @@ export class SimWorld {
   }
 
   // ─── Clock and scheduling ───────────────────────────────────────────────────
+
+  /** Clock minutes since Friday 00:00 for a tick (default: now). */
+  clock(tick = this.tick): number {
+    return clockMinutes(tick, this.clockOffset);
+  }
+
+  fmt(tick = this.tick): string {
+    return formatClock(this.clock(tick));
+  }
+
+  hour(tick = this.tick): number {
+    return hourOfDay(this.clock(tick));
+  }
+
+  daylight(tick = this.tick): number {
+    return daylight(this.hour(tick));
+  }
+
+  /** The tick of the next time the clock reads `hour` (0 to 24), strictly after now. */
+  nextTickAtHour(hour: number, from = this.tick): number {
+    const now = this.clock(from);
+    const startOfDay = now - (now % TICKS_PER_DAY);
+    let target = startOfDay + hour * 60;
+    while (target <= now) target += TICKS_PER_DAY;
+    return target - this.clockOffset;
+  }
+
+  /** Ask the view to change speed, e.g. fast forward overnight. */
+  requestSpeed(speed: 1 | 4 | 16 | 64): void {
+    this.events.emit({ type: 'speed', tick: this.tick, speed });
+  }
 
   schedule(atTick: number, run: (world: SimWorld) => void): void {
     this.taskSeq += 1;

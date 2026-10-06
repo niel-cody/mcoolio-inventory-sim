@@ -5,7 +5,7 @@ import type { CameraBeat } from './sim/scenario';
 import { ScenarioRunner } from './sim/scenario';
 import type { SimMode } from './features';
 
-export type Speed = 1 | 4 | 16;
+export type Speed = 1 | 4 | 16 | 64;
 
 export type Selection =
   | { kind: 'item'; itemId: string; venueId: string }
@@ -49,6 +49,9 @@ export interface SimStore {
   seekBy: (delta: number) => void;
   nextBeat: () => void;
   prevBeat: () => void;
+  /** Seek to the next 09:00 (morning) or 17:00 (evening) within the playbook. */
+  nextMorning: () => void;
+  nextEvening: () => void;
   restart: () => void;
   setIntro: (open: boolean) => void;
   setCamera: (beat: CameraBeat) => void;
@@ -63,6 +66,7 @@ const build = (seed: number, mode: SimMode) => createMcOolioWorld(seed, mode);
 export const useSim = create<SimStore>((set, get) => {
   const listeners = {
     onCamera: (beat: CameraBeat) => set({ camera: beat }),
+    onSpeed: (speed: Speed) => set({ speed }),
     onDone: () => set({ playing: false }),
   };
   const first = SCENARIOS[0];
@@ -124,6 +128,14 @@ export const useSim = create<SimStore>((set, get) => {
       const r = get().runner;
       const prev = [...r.beats()].reverse().find((b) => b.at < r.world.tick - 2);
       get().seek(prev ? prev.at : 0);
+    },
+    nextMorning: () => {
+      const r = get().runner;
+      get().seek(Math.min(r.scenario.durationTicks, r.world.nextTickAtHour(9)));
+    },
+    nextEvening: () => {
+      const r = get().runner;
+      get().seek(Math.min(r.scenario.durationTicks, r.world.nextTickAtHour(17)));
     },
     restart: () => {
       get().runner.reset();

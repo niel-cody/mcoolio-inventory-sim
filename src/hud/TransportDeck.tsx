@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useWorld } from '../scene/useWorld';
-import { formatTick } from '../sim/clock';
 import { useSim, type Speed } from '../store';
 import { FeaturePill } from './DebugPanel';
 
@@ -10,7 +9,9 @@ export function TransportDeck() {
   const runner = useSim((s) => s.runner);
   const playing = useSim((s) => s.playing);
   const speed = useSim((s) => s.speed);
-  const { togglePlay, setSpeed, seek, seekBy, nextBeat, prevBeat, restart } = useSim.getState();
+  const { togglePlay, setSpeed, seek, seekBy, nextBeat, prevBeat, restart, nextMorning, nextEvening } = useSim.getState();
+  const multiDay = runner.scenario.durationTicks > 20 * 60;
+  const dayNow = world.daylight() > 0.5;
   const beats = runner.beats();
   const duration = runner.scenario.durationTicks;
   const tick = world.tick;
@@ -28,8 +29,8 @@ export function TransportDeck() {
         togglePlay();
       } else if (e.key === 'ArrowLeft') seekBy(e.shiftKey ? -60 : -10);
       else if (e.key === 'ArrowRight') seekBy(e.shiftKey ? 60 : 10);
-      else if (e.key === 'ArrowUp') setSpeed(speed === 1 ? 4 : 16);
-      else if (e.key === 'ArrowDown') setSpeed(speed === 16 ? 4 : 1);
+      else if (e.key === 'ArrowUp') setSpeed(speed === 1 ? 4 : speed === 4 ? 16 : 64);
+      else if (e.key === 'ArrowDown') setSpeed(speed === 64 ? 16 : speed === 16 ? 4 : 1);
       else if (e.key === 'Home') restart();
     };
     window.addEventListener('keydown', onKey);
@@ -71,7 +72,7 @@ export function TransportDeck() {
               key={b.at}
               className={`deck-beat ${b.at <= tick ? 'done' : ''} ${b.featureId ? 'tagged' : ''}`}
               style={{ left: `${(b.at / duration) * 100}%` }}
-              title={`${formatTick(b.at).slice(4)} · ${b.caption}`}
+              title={`${world.fmt(b.at).slice(4)} · ${b.caption}`}
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => {
                 e.stopPropagation();
@@ -82,9 +83,12 @@ export function TransportDeck() {
           <div className="deck-head" style={{ left: `${pct}%` }} />
         </div>
         <div className="deck-times">
-          <span>{formatTick(0)}</span>
-          <span className="deck-now">{formatTick(shown)}</span>
-          <span>{formatTick(duration)}</span>
+          <span>{world.fmt(0)}</span>
+          <span className="deck-now">
+            {world.daylight(shown) > 0.5 ? '☀ ' : '☾ '}
+            {world.fmt(shown)}
+          </span>
+          <span>{world.fmt(duration)}</span>
         </div>
       </div>
       <div className="deck-controls">
@@ -106,8 +110,18 @@ export function TransportDeck() {
         <button className="deck-btn" onClick={nextBeat} title="Next beat" aria-label="Next beat">
           ⏩
         </button>
+        {multiDay && (
+          <div className="deck-daynight" title="Jump to the next morning or evening">
+            <button className={dayNow ? 'on' : ''} onClick={nextMorning} aria-label="Next morning">
+              ☀
+            </button>
+            <button className={!dayNow ? 'on' : ''} onClick={nextEvening} aria-label="Next evening">
+              ☾
+            </button>
+          </div>
+        )}
         <div className="deck-speed" title="Speed (↑ ↓)">
-          {([1, 4, 16] as Speed[]).map((s) => (
+          {([1, 4, 16, 64] as Speed[]).map((s) => (
             <button key={s} className={speed === s ? 'on' : ''} onClick={() => setSpeed(s)}>
               {s}x
             </button>

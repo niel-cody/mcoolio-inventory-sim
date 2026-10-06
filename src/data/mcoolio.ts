@@ -66,9 +66,9 @@ export function createMcOolioWorld(seed: number, mode: SimMode = 'today'): SimWo
   c.addVenue({ id: VENUE.fitzroy, name: 'McOolio Fitzroy', shortName: 'Fitzroy', character: 'Cocktail-led', position: [0, -8] });
 
   // ─── Suppliers ────────────────────────────────────────────────────────────
-  c.addSupplier({ id: SUPPLIER.harbour, name: 'Harbour Liquor Co', type: 'LIQUOR', leadTimeTicks: 90, colour: '#f2b134' });
-  c.addSupplier({ id: SUPPLIER.nightowl, name: 'Night Owl Roasters', type: 'COFFEE', leadTimeTicks: 200, colour: '#c9774a' });
-  c.addSupplier({ id: SUPPLIER.spiceroute, name: 'Spice Route Wholesale', type: 'FOOD', leadTimeTicks: 120, colour: '#e0553d' });
+  c.addSupplier({ id: SUPPLIER.harbour, name: 'Harbour Liquor Co', type: 'LIQUOR', transitTicks: 150, dispatchHour: 7, colour: '#f2b134' });
+  c.addSupplier({ id: SUPPLIER.nightowl, name: 'Night Owl Roasters', type: 'COFFEE', transitTicks: 210, dispatchHour: 7.5, colour: '#c9774a' });
+  c.addSupplier({ id: SUPPLIER.spiceroute, name: 'Spice Route Wholesale', type: 'FOOD', transitTicks: 90, dispatchHour: 6.5, colour: '#e0553d' });
 
   // ─── Stock items ──────────────────────────────────────────────────────────
   c.addItem({ id: ITEM.kingfisher, name: 'Kingfisher 330 mL', itemType: 'STOCKED', baseUom: 'each', zone: 'coolroom', purchaseUnit: { name: 'Carton of 24', factor: 24 }, supplierId: SUPPLIER.harbour, colour: '#f5a524' });
@@ -129,7 +129,7 @@ export function createMcOolioWorld(seed: number, mode: SimMode = 'today'): SimWo
   // ─── Opening stock, in purchase units ─────────────────────────────────────
   const opening: Record<string, Partial<Record<string, Opening>>> = {
     [VENUE.newtown]: {
-      [ITEM.kingfisher]: { units: 10, unitCostMinor: 4800 },
+      [ITEM.kingfisher]: { units: 15, unitCostMinor: 4800 },
       [ITEM.absolut]: { units: 10, unitCostMinor: 2800 },
       [ITEM.greygoose]: { units: 2, unitCostMinor: 5200 },
       [ITEM.espresso]: { units: 2, unitCostMinor: 4500 },
@@ -140,7 +140,7 @@ export function createMcOolioWorld(seed: number, mode: SimMode = 'today'): SimWo
       [ITEM.naan]: { units: 6, unitCostMinor: 1200 },
     },
     [VENUE.valley]: {
-      [ITEM.kingfisher]: { units: 6, unitCostMinor: 4800 },
+      [ITEM.kingfisher]: { units: 12, unitCostMinor: 4800 },
       [ITEM.absolut]: { units: 6, unitCostMinor: 2800 },
       [ITEM.espresso]: { units: 1, unitCostMinor: 4500 },
       [ITEM.sugar]: { units: 2, unitCostMinor: 900 },
@@ -150,8 +150,8 @@ export function createMcOolioWorld(seed: number, mode: SimMode = 'today'): SimWo
       [ITEM.naan]: { units: 3, unitCostMinor: 1200 },
     },
     [VENUE.fitzroy]: {
-      [ITEM.kingfisher]: { units: 6, unitCostMinor: 4800 },
-      [ITEM.absolut]: { units: 5, unitCostMinor: 2800 },
+      [ITEM.kingfisher]: { units: 3, unitCostMinor: 4800 },
+      [ITEM.absolut]: { units: 8, unitCostMinor: 2800 },
       [ITEM.greygoose]: { units: 3, unitCostMinor: 5200 },
       [ITEM.espresso]: { units: 2, unitCostMinor: 4500 },
       [ITEM.sugar]: { units: 2, unitCostMinor: 900 },
@@ -175,25 +175,31 @@ export function createMcOolioWorld(seed: number, mode: SimMode = 'today'): SimWo
   // Portions left from yesterday's batch, valued at a demo cost per portion.
   w.stock.receive(ITEM.biryaniPool, VENUE.newtown, toBase(60), 60 * 310, 'OPENING', 'opening');
   w.stock.receive(ITEM.biryaniPool, VENUE.valley, toBase(24), 24 * 310, 'OPENING', 'opening');
-  w.stock.receive(ITEM.biryaniPool, VENUE.fitzroy, toBase(18), 18 * 310, 'OPENING', 'opening');
+  w.stock.receive(ITEM.biryaniPool, VENUE.fitzroy, toBase(24), 24 * 310, 'OPENING', 'opening');
 
   // ─── Reorder points and pars (par-driven ordering is a Coming feature; the thresholds themselves are plain data) ─
   const thresholds: Record<string, { reorder: number; par: number }> = {
-    [ITEM.kingfisher]: { reorder: 48, par: 144 },
-    [ITEM.absolut]: { reorder: 700, par: 4200 },
+    [ITEM.kingfisher]: { reorder: 72, par: 480 },
+    [ITEM.absolut]: { reorder: 1400, par: 9800 },
     [ITEM.greygoose]: { reorder: 350, par: 1400 },
-    [ITEM.espresso]: { reorder: 600, par: 7200 },
+    [ITEM.espresso]: { reorder: 900, par: 10_800 },
     [ITEM.sugar]: { reorder: 500, par: 3000 },
     [ITEM.rice]: { reorder: 5_000, par: 40_000 },
     [ITEM.chicken]: { reorder: 2_500, par: 15_000 },
     [ITEM.spice]: { reorder: 300, par: 2_000 },
-    [ITEM.naan]: { reorder: 10, par: 60 },
+    [ITEM.naan]: { reorder: 15, par: 100 },
     [ITEM.biryaniPool]: { reorder: 4, par: 20 },
   };
+  const perVenue: Record<string, Partial<Record<string, { reorder: number; par: number }>>> = {
+    [VENUE.fitzroy]: { [ITEM.kingfisher]: { reorder: 24, par: 96 } },
+    [VENUE.valley]: { [ITEM.absolut]: { reorder: 700, par: 5600 }, [ITEM.kingfisher]: { reorder: 72, par: 576 } },
+    [VENUE.newtown]: { [ITEM.absolut]: { reorder: 1050, par: 7000 } },
+  };
   for (const venue of c.venueList()) {
-    for (const [itemId, t] of Object.entries(thresholds)) {
+    for (const [itemId, base] of Object.entries(thresholds)) {
       // Only items the venue actually stocks get thresholds; an empty level would read as sold out.
       if (!w.stock.levels.has(`${itemId}@${venue.id}`)) continue;
+      const t = perVenue[venue.id]?.[itemId] ?? base;
       w.stock.setThresholds(itemId, venue.id, { reorderPoint: toBase(t.reorder), parLevel: toBase(t.par) });
     }
   }

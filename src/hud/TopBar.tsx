@@ -1,4 +1,3 @@
-import { formatTick } from '../sim/clock';
 import { useSim } from '../store';
 import { useWorld } from '../scene/useWorld';
 
@@ -34,7 +33,7 @@ export function TopBar() {
       </div>
       <div className="topbar-mid">
         {mode === 'roadmap' && <span className="mode-badge inline">Where we're going · roadmap layer on</span>}
-        <span className="clock">{formatTick(world.tick)}</span>
+        <span className="clock">{world.fmt()}</span>
       </div>
     </div>
   );
