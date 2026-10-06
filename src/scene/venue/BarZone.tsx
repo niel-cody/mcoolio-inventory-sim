@@ -9,6 +9,7 @@ import { P } from '../palette';
 import { useSimEvents } from '../useSimEvents';
 import { useWorld } from '../useWorld';
 import { useLabel } from '../useLabel';
+import { useSim } from '../../store';
 import { useToWorld } from './IslandContext';
 import { Bottle } from './Bottle';
 import { Clickable } from './Clickable';
@@ -31,6 +32,7 @@ export function BarZone({ venueId, focused }: { venueId: string; focused: boolea
   useSimEvents(
     useCallback(
       (e) => {
+        if (useSim.getState().runner.seeking) return;
         if (e.type !== 'order' || e.locationId !== venueId || e.action !== 'COMMIT') return;
         if (e.demands.some((d) => d.itemId === ITEM.espresso)) {
           machine.current?.burst(3);

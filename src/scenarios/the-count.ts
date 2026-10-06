@@ -14,6 +14,8 @@ export const theCount: Scenario = {
   strap: 'Stocktake at Fitzroy finds an Absolut variance against theoretical.',
   featureIds: ['stocktakes', 'waste-capture'],
   durationTicks: 90,
+  youWillSee: ['A stocktake captures theoretical Absolut, then the shelf is counted.', 'The 140 mL variance posts as a stock movement so system and shelf agree.', 'Where we\'re going breaks the variance down into waste and loss by type.'],
+  tryThis: 'Click the Absolut bottles before and after the count posts.',
   suggestedSpeed: 1,
   steps: [
     { at: 0, camera: { view: 'venue', venueId: VENUE.fitzroy, zone: 'bar' }, caption: 'Fitzroy after a shift. Theoretical stock says one thing; the shelf says another.' },

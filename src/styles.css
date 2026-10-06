@@ -245,3 +245,68 @@ td.num { font-family: var(--mono); text-align: right; white-space: nowrap; }
 .splash-title span { color: var(--purple-glow); }
 .splash-sub { color: var(--muted); font-size: 15px; }
 @keyframes splash-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ─── Shell with right rail ─── */
+.app { display: grid; grid-template-columns: 1fr 380px; }
+.main { position: relative; min-width: 0; overflow: hidden; }
+.hud { position: absolute; inset: 0; }
+.hud-bottom { grid-template-columns: minmax(220px, 300px) minmax(360px, 1fr); align-items: end; }
+.rail { background: #0f0820; border-left: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 10px; padding: 10px 12px; min-height: 0; overflow: hidden; }
+.rail-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.rail-head-btns { display: flex; gap: 6px; }
+.rail-mode-note { padding: 0 2px; }
+.rail .panel { background: var(--card); }
+.rail .hud-card { width: auto; max-height: 48vh; }
+.rail .feed-panel { flex: 1; min-height: 0; max-height: none; display: flex; flex-direction: column; }
+.rail .feed-panel .feed { flex: 1; max-height: none; overflow: auto; }
+.rail .feed-row { font-size: 12px; padding: 2px 0; border-bottom: 1px solid rgba(155,108,242,0.08); }
+.mode-badge.inline { position: static; transform: none; }
+.topbar-mid { gap: 12px; }
+
+/* ─── Playbook panel ─── */
+.playbook-kicker { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.playbook-title { font-size: 20px; font-weight: 900; margin-top: 2px; }
+.playbook-strap { color: var(--lilac); font-size: 13px; margin: 4px 0 8px; }
+.playbook-section { margin-top: 8px; }
+.playbook-section p { margin: 4px 0 0; font-size: 13px; }
+.playbook-steps { margin: 4px 0 0; padding-left: 18px; font-size: 13px; display: flex; flex-direction: column; gap: 3px; }
+.playbook-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+.playbook-play { margin-top: 10px; width: 100%; }
+.playbook-list { display: flex; flex-direction: column; gap: 2px; max-height: 44vh; overflow: auto; }
+
+/* ─── Transport deck ─── */
+.deck { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 10px 16px 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
+.deck-caption { font-size: 16px; font-weight: 500; display: flex; gap: 10px; align-items: center; min-height: 24px; margin-bottom: 8px; }
+.deck-scrub { cursor: pointer; padding: 6px 0 2px; touch-action: none; user-select: none; }
+.deck-track { position: relative; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+.deck-fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--purple-glow); border-radius: 3px; }
+.deck-beat { position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--purple-ink); border: 2px solid var(--lilac); padding: 0; cursor: pointer; }
+.deck-beat.done { background: var(--purple-glow); }
+.deck-beat.tagged { border-color: var(--yellow); }
+.deck-beat:hover { transform: scale(1.4); }
+.deck-head { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 0 4px rgba(255,235,59,0.25); pointer-events: none; }
+.deck-times { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 6px; }
+.deck-now { color: var(--text); font-weight: 500; }
+.deck-controls { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; }
+.deck-btn { background: rgba(255,255,255,0.06); border: 1px solid var(--card-border); color: var(--text); border-radius: 999px; width: 40px; height: 32px; font-size: 13px; font-weight: 700; }
+.deck-btn:hover { background: rgba(155,108,242,0.25); }
+.deck-play { width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--purple); color: white; font-size: 20px; box-shadow: 0 0 0 6px rgba(103,58,182,0.3); }
+.deck-play.on { background: var(--yellow); color: var(--charcoal); box-shadow: 0 0 0 6px rgba(255,235,59,0.25); }
+.deck-speed { display: flex; background: rgba(255,255,255,0.06); border: 1px solid var(--card-border); border-radius: 999px; padding: 3px; margin-left: 8px; }
+.deck-speed button { background: transparent; border: 0; color: var(--muted); font-weight: 700; padding: 4px 10px; border-radius: 999px; font-size: 12px; }
+.deck-speed button.on { background: var(--purple-glow); color: white; }
+
+/* ─── Intro ─── */
+.intro { position: fixed; inset: 0; z-index: 60; background: rgba(13,7,25,0.78); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+.intro-card { width: min(640px, calc(100% - 40px)); background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 26px 30px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+.intro-kicker { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+.intro-card h1 { font-size: 34px; margin: 4px 0 10px; }
+.intro-card h1 span { color: var(--purple-glow); }
+.intro-lead { font-size: 15px; margin: 0 0 12px; }
+.intro-steps { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.intro-actions { display: flex; gap: 10px; margin: 18px 0 10px; }
+@media (min-width: 1600px) {
+  .app { grid-template-columns: 1fr 420px; }
+  .deck-caption { font-size: 20px; }
+  .rail .feed-row { font-size: 13px; }
+}

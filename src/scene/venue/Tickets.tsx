@@ -38,6 +38,7 @@ export function Tickets({ venueId }: { venueId: string }) {
   useSimEvents(
     useCallback(
       (e) => {
+        if (useSim.getState().runner.seeking) return;
         if (e.type !== 'order' || e.locationId !== venueId) return;
         if (e.action !== 'COMMIT' && e.action !== 'RELEASE' && e.action !== 'REVERSE') return;
         const now = clock.current;

@@ -12,6 +12,8 @@ export const voidRefund: Scenario = {
   strap: 'A martini voided before complete releases its reservation. A completed Kingfisher refunded reverses it.',
   featureIds: ['depletion-engine', 'waste-capture'],
   durationTicks: 70,
+  youWillSee: ['Ringing up a martini reserves stock without moving it.', 'Voiding before complete releases the reservation; the vodka stays in the bottle.', 'Refunding a completed Kingfisher reverses it and restocks at the cost it left at.'],
+  tryThis: 'Click a ticket while it flies to see its reservation rows and their status.',
   suggestedSpeed: 1,
   steps: [
     { at: 0, camera: { view: 'venue', venueId: VENUE.fitzroy, zone: 'bar' }, caption: 'Reservations: created reserves, complete commits, void releases, refund reverses.' },

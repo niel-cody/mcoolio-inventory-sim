@@ -29,6 +29,10 @@ export interface Scenario {
   featureIds: FeatureId[];
   /** Ticks the scenario runs before it reports done. */
   durationTicks: number;
+  /** Three short lines for the playbook panel. */
+  youWillSee: string[];
+  /** What the person at the keyboard should try while it plays. */
+  tryThis: string;
   /** Speed the picker starts at. */
   suggestedSpeed: 1 | 4 | 16;
   /** Adjusts the freshly seeded world before any step runs (opening counts and the like). */
@@ -51,6 +55,8 @@ export class ScenarioRunner {
   scenario: Scenario;
   mode: SimMode;
   done = false;
+  /** True while a seek replays the world; the view should not animate those events. */
+  seeking = false;
   private applied = 0;
   private steps: ScenarioStep[] = [];
 
@@ -127,6 +133,27 @@ export class ScenarioRunner {
 
   advance(ticks: number): void {
     for (let i = 0; i < ticks && !this.done; i++) this.step();
+  }
+
+  /** Captioned static steps, the chapters on the scrubber. */
+  beats(): { at: number; caption: string; featureId?: FeatureId }[] {
+    return this.scenario.steps.filter((s) => s.caption && s.at > 0).map((s) => ({ at: s.at, caption: s.caption!, featureId: s.featureId }));
+  }
+
+  /** Jump to a sim minute. Backwards means rebuild from the seed and replay, so it stays deterministic. */
+  seekTo(tick: number): void {
+    const target = Math.max(0, Math.min(this.scenario.durationTicks, Math.round(tick)));
+    this.seeking = true;
+    try {
+      if (target < this.world.tick) this.world = this.load();
+      while (this.world.tick < target) {
+        this.world.step();
+        this.applyDue(this.world);
+      }
+      this.done = this.world.tick >= this.scenario.durationTicks && this.applied >= this.steps.length;
+    } finally {
+      this.seeking = false;
+    }
   }
 
   progress(): number {

@@ -14,6 +14,8 @@ export const orderingCycle: Scenario = {
   strap: 'Valley Kingfisher drops below its reorder point. Draft, sent, in transit, received short, posted.',
   featureIds: ['purchase-orders', 'suppliers', 'credit-notes', 'par-levels-suggested-orders'],
   durationTicks: 300,
+  youWillSee: ['Valley Kingfisher drops below its reorder point.', 'A purchase order walks Draft, Sent, In transit, Received, Posted; the truck travels from the depot.', 'The delivery lands one carton short; stock and average cost update only at Posted.'],
+  tryThis: 'Click the truck on the road, or the cartons on the dock, for the order\'s card.',
   suggestedSpeed: 16,
   steps: [
     { at: 0, camera: { view: 'venue', venueId: VENUE.valley, zone: 'coolroom' }, caption: 'Fortitude Valley. Six cartons of Kingfisher in the cool room, reorder point two cartons.' },
@@ -66,7 +68,9 @@ export const orderingCycle: Scenario = {
         });
       },
     },
-    { at: 60, camera: { view: 'venue', venueId: VENUE.valley, zone: 'dock' }, caption: 'The dock at the Valley. Deliveries land here and get checked against the order.' },
+    { at: 40, caption: 'Kingfisher is flying out. Watch the cartons in the cool room.' },
+    { at: 150, camera: { view: 'world' }, caption: 'The truck is on the road from the Harbour Liquor depot.' },
+    { at: 240, camera: { view: 'venue', venueId: VENUE.valley, zone: 'coolroom' }, caption: 'Posted. The cool room is full again and the average cost per carton moved with the dearer delivery.' },
 
   ],
 };

@@ -10,6 +10,8 @@ export const fridayService: Scenario = {
   strap: 'Orders flow at all three venues. Tickets fly, stock ticks down, reservations commit on complete.',
   featureIds: ['depletion-engine', 'catalogue-item-types', 'recipes-variants'],
   durationTicks: 240,
+  youWillSee: ['Tickets rise from each POS and split towards the stock they deplete.', 'Kingfisher takes one unit off its pool, the martini splits four ways, biryani comes from the pot.', 'Reservations commit a few minutes after each order is rung up.'],
+  tryThis: 'Click Fitzroy to fly in, then click a bottle, the pot or a carton for its live card.',
   suggestedSpeed: 4,
   steps: [
     { at: 0, camera: { view: 'world' }, caption: 'This is McOolio: three venues, four products, one inventory.' },

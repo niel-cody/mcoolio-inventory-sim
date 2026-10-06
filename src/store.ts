@@ -35,6 +35,7 @@ export interface SimStore {
   debugOpen: boolean;
   /** True once the 3D scene has drawn its first frame. */
   sceneReady: boolean;
+  introOpen: boolean;
 
   setScenario: (id: string) => void;
   setMode: (mode: SimMode) => void;
@@ -44,6 +45,12 @@ export interface SimStore {
   setSpeed: (speed: Speed) => void;
   reset: () => void;
   stepTicks: (n: number) => void;
+  seek: (tick: number) => void;
+  seekBy: (delta: number) => void;
+  nextBeat: () => void;
+  prevBeat: () => void;
+  restart: () => void;
+  setIntro: (open: boolean) => void;
   setCamera: (beat: CameraBeat) => void;
   select: (s: Selection | null) => void;
   setHover: (h: HoverTip | null) => void;
@@ -72,6 +79,13 @@ export const useSim = create<SimStore>((set, get) => {
     hover: null,
     debugOpen: false,
     sceneReady: false,
+    introOpen: (() => {
+      try {
+        return localStorage.getItem('mcoolio.intro.seen') !== '1';
+      } catch {
+        return true;
+      }
+    })(),
 
     setScenario: (id) => {
       const scenario = scenarioById(id);
@@ -95,6 +109,35 @@ export const useSim = create<SimStore>((set, get) => {
     stepTicks: (n) => {
       get().runner.advance(n);
       set({ version: get().version + 1 });
+    },
+    seek: (tick) => {
+      get().runner.seekTo(tick);
+      set({ version: get().version + 1, selection: get().selection?.kind === 'ticket' ? null : get().selection });
+    },
+    seekBy: (delta) => get().seek(get().runner.world.tick + delta),
+    nextBeat: () => {
+      const r = get().runner;
+      const next = r.beats().find((b) => b.at > r.world.tick);
+      get().seek(next ? next.at : r.scenario.durationTicks);
+    },
+    prevBeat: () => {
+      const r = get().runner;
+      const prev = [...r.beats()].reverse().find((b) => b.at < r.world.tick - 2);
+      get().seek(prev ? prev.at : 0);
+    },
+    restart: () => {
+      get().runner.reset();
+      set({ version: get().version + 1, selection: null });
+    },
+    setIntro: (open) => {
+      set({ introOpen: open });
+      if (!open) {
+        try {
+          localStorage.setItem('mcoolio.intro.seen', '1');
+        } catch {
+          /* private window */
+        }
+      }
     },
     setCamera: (beat) => set({ camera: beat }),
     select: (selection) => set({ selection }),

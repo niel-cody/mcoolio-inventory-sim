@@ -15,6 +15,8 @@ export const the86: Scenario = {
   strap: 'Fitzroy pours Absolut hard. The pour pool hits zero and the martini, Nip and Double go down at Fitzroy only.',
   featureIds: ['depletion-engine', 'sold-out-flag', 'ai-stock-manager', 'ingredient-swap', 'transfers', 'waste-capture'],
   durationTicks: 220,
+  youWillSee: ['Fitzroy pours Absolut hard until the pour pool hits zero.', 'Nip, Double and the martini go down at Fitzroy only; the other venues stay green.', 'In Where we\'re going, Ngara suggests a swap and a transfer, and the bar records the dregs as waste.'],
+  tryThis: 'Watch the heat rings in the world view, then flip to Where we\'re going and replay.',
   suggestedSpeed: 4,
   steps: [
     { at: 0, camera: { view: 'venue', venueId: VENUE.fitzroy, zone: 'bar' }, caption: 'Fitzroy on a big night. Five bottles of Absolut on the shelf, 3,500 mL.' },

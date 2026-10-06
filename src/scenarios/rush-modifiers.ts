@@ -12,6 +12,8 @@ export const rushModifiers: Scenario = {
   strap: 'Espresso Martini with an extra shot. Espresso depletes 60 mL, aggregated into one demand.',
   featureIds: ['depletion-engine', 'recipes-variants'],
   durationTicks: 90,
+  youWillSee: ['A plain martini takes 30 mL of espresso.', 'An extra shot is its own recipe; the two merge into one 60 mL demand.', 'A Double with a Nip on the side is 90 mL off one pour pool.'],
+  tryThis: 'Click the espresso machine to see the demands land as integers in base units.',
   suggestedSpeed: 1,
   steps: [
     { at: 0, camera: { view: 'venue', venueId: VENUE.fitzroy, zone: 'bar' }, caption: 'Fitzroy bar. Watch the espresso machine.' },

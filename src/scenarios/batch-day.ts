@@ -13,6 +13,8 @@ export const batchDay: Scenario = {
   strap: 'Newtown cooks a biryani batch. Rice, chicken and spice go in at production. Sales take portions, never rice.',
   featureIds: ['batch-production-backoffice', 'catalogue-item-types', 'waste-capture', 'batch-production-pos-kds'],
   durationTicks: 240,
+  youWillSee: ['A production run consumes rice, chicken and spice the moment it starts.', 'Biryani Meals sell while the pot cooks; they take portions and naan, never rice.', 'Twenty portions land in the pot carrying the cost of what went into them.'],
+  tryThis: 'Click the rice sacks while meals sell: the number does not move.',
   suggestedSpeed: 4,
   setup: (w) => {
     // Opening count for batch day: the lunch batch is nearly gone.

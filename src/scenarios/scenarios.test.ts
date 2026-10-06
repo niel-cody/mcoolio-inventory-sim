@@ -77,3 +77,28 @@ describe('scenarios', () => {
     expect(rm.world.events.log.some((e) => e.type === 'waste')).toBe(true);
   });
 });
+
+describe('seeking', () => {
+  it('seeking backwards replays to an identical world', () => {
+    const r = new ScenarioRunner(build, scenarioById('the-86'), 'roadmap');
+    r.advance(150);
+    const atOneFifty = r.world.events.log.map((e) => JSON.stringify(e));
+    r.seekTo(60);
+    expect(r.world.tick).toBe(60);
+    expect(r.seeking).toBe(false);
+    r.seekTo(150);
+    expect(r.world.events.log.map((e) => JSON.stringify(e))).toEqual(atOneFifty);
+    r.seekTo(10_000);
+    expect(r.world.tick).toBe(220);
+    expect(r.done).toBe(true);
+  });
+
+  it('every scenario has beats, three things to see and a try-this line', () => {
+    for (const s of SCENARIOS) {
+      const r = new ScenarioRunner(build, s, 'today');
+      expect(r.beats().length, s.id).toBeGreaterThan(1);
+      expect(s.youWillSee.length, s.id).toBe(3);
+      expect(s.tryThis.length, s.id).toBeGreaterThan(10);
+    }
+  });
+});
