@@ -13,6 +13,13 @@ npm run dev
 
 `npm test` runs the Vitest suite, including the parity tests ported from the real inventory service's Go scenario tests. `npm run build` produces a static site in `dist` for Vercel.
 
+## Where to read next
+
+- `CLAUDE.md` for how to work in this repo and where we are up to.
+- `VISION.md` for the end state: a training and rehearsal tool for Oolio people and, later, customers.
+- `ROADMAP.md` for the prioritised backlog. Add ideas there.
+- `CHANGELOG.md` for what has shipped and when, by commit.
+
 ## Layout
 
 - `src/sim` is the engine: pure TypeScript, no React, no three. Catalogue with item types (STOCKED, NON_STOCKED, BATCH), versioned recipes, stock in integer base units (x10,000) with FIFO cost layers behind and average cost in front, reservations (RESERVED to COMMITTED, RELEASED on void, REVERSED on refund), depletion resolve ported from the Go service, purchase orders, production runs, stocktakes, a seeded RNG and a tick clock (1 tick = 1 sim minute).
